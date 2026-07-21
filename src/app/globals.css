@@ -7,9 +7,19 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-metropolis), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-metropolis), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* CloudKeeper Figma tokens */
+  --color-ck-primary: #17a5fb;
+  --color-ck-pink: #e80584;
+  --color-ck-promo: #150d30;
+  --color-ck-text: #253746;
+  --color-ck-grey: #828282;
+  --color-ck-border: #e5e5e5;
+  --color-ck-surface: #fafafa;
+  --color-ck-surface-blue: #f4fbff;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,9 +59,15 @@
 }
 
 :root {
-  /* Cool slate + teal enterprise palette (light, marketing-first) */
-  --background: oklch(0.99 0.005 230);
-  --foreground: oklch(0.2 0.02 240);
+  /* CloudKeeper brand palette */
+  --ck-primary: #17a5fb;
+  --ck-pink: #e80584;
+  --ck-promo: #150d30;
+  --ck-text: #253746;
+  --ck-grey: #828282;
+
+  --background: oklch(1 0 0);
+  --foreground: #253746;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.02 240);
   --popover: oklch(1 0 0);
@@ -134,4 +150,26 @@
   .font-heading {
     font-family: var(--font-heading);
   }
+
+  .site-footer .footer-nav-link,
+  .site-footer .footer-nav-link:hover,
+  .site-footer .footer-nav-link:focus-visible,
+  .site-footer .footer-nav-link:visited {
+    color: #1d3e69;
+    text-decoration: none;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Logo row — pause marquee on hover */
+.group\/marquee:hover .logo-marquee-track {
+  animation-play-state: paused;
 }

@@ -6,8 +6,6 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-gsap.registerPlugin(ScrollTrigger);
-
 type RevealProps = {
   children: ReactNode;
   className?: string;
@@ -19,6 +17,8 @@ export function Reveal({ children, className }: RevealProps) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
       gsap.fromTo(

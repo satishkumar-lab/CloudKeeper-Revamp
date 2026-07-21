@@ -1,20 +1,41 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Manrope, Syne } from "next/font/google";
+import localFont from "next/font/local";
+import { Geist_Mono, Roboto_Condensed } from "next/font/google";
 
 import { AppProviders } from "@/components/providers/app-providers";
 import { siteConfig } from "@/config/site";
 
 import "./globals.css";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-  display: "swap",
-});
-
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-syne",
+const metropolis = localFont({
+  src: [
+    {
+      path: "../../public/fonts/metropolis/Metropolis-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/metropolis/Metropolis-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/metropolis/Metropolis-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/metropolis/Metropolis-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/metropolis/Metropolis-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-metropolis",
   display: "swap",
 });
 
@@ -22,6 +43,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
   display: "swap",
+});
+
+const robotoCondensed = Roboto_Condensed({
+  subsets: ["latin"],
+  variable: "--font-roboto-condensed",
+  display: "swap",
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -67,7 +96,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${syne.variable} ${geistMono.variable}`}
+      className={`${metropolis.variable} ${geistMono.variable} ${robotoCondensed.variable}`}
     >
       <body className="min-h-dvh font-sans antialiased">
         <AppProviders>{children}</AppProviders>

@@ -1,0 +1,35 @@
+/** Figma-exported assets for navigation (node 8251:21215) */
+export const navAssets = {
+  logo: "/assets/home/nav/ck-logo-desktop.svg",
+  missionLogo: "/assets/home/nav/mission-logo.svg",
+  searchIcon: "/assets/home/nav/search-icon.svg",
+  chevronDown: "/assets/home/nav/chevron-down.svg",
+  launchArrow: "/assets/home/nav/launch-arrow.svg",
+} as const;
+
+export const navDropdownAssets = {
+  linkArrow: "/assets/home/nav/dropdown/link-arrow.svg",
+  pillArrow: "/assets/home/nav/dropdown/pill-arrow.svg",
+  tagNew: "/assets/home/nav/dropdown/tag-new.svg",
+  iconPlatform: "/assets/home/nav/dropdown/icon-platform.svg",
+  iconWhatsNew: "/assets/home/nav/dropdown/icon-whats-new.svg",
+  exploreArrow: "/assets/home/nav/dropdown/explore-arrow.svg",
+  iconAz: "/assets/home/nav/dropdown/icon-az.svg",
+  iconPpa: "/assets/home/nav/dropdown/icon-ppa.svg",
+  iconBlog: "/assets/home/nav/dropdown/icon-blog.svg",
+  iconExpertInterview: "/assets/home/nav/dropdown/icon-expert-interview.svg",
+  iconGlossary: "/assets/home/nav/dropdown/icon-glossary.svg",
+  iconReports: "/assets/home/nav/dropdown/icon-reports.svg",
+  iconWhitepapers: "/assets/home/nav/dropdown/icon-whitepapers.svg",
+  iconPodcasts: "/assets/home/nav/dropdown/icon-podcasts.svg",
+  iconWebinars: "/assets/home/nav/dropdown/icon-webinars.svg",
+  insightsBanner: "/assets/home/nav/dropdown/insights-banner.png",
+  iconAbout: "/assets/home/nav/dropdown/icon-about.svg",
+  iconCareers: "/assets/home/nav/dropdown/icon-careers.svg",
+  iconTeam: "/assets/home/nav/dropdown/icon-team.svg",
+  iconNewsroom: "/assets/home/nav/dropdown/icon-newsroom.svg",
+  iconAlliances: "/assets/home/nav/dropdown/icon-alliances.svg",
+  iconUseCase: "/assets/home/nav/dropdown/icon-use-case.svg",
+  iconServices: "/assets/home/nav/dropdown/icon-services.svg",
+  iconPrograms: "/assets/home/nav/dropdown/icon-programs.svg",
+} as const;
