@@ -70,6 +70,7 @@ export type CapabilityPill = {
   positionClassName: string;
   gradient: string;
   pyClassName: string;
+  revealIndex: number;
 };
 
 export const capabilitiesTabs: readonly {
@@ -93,6 +94,7 @@ export const capabilitiesUseCasePills: readonly CapabilityPill[] = [
     positionClassName: "left-[192.59px] top-[46.35px]",
     gradient: capabilityPillGradient(-61.65),
     pyClassName: "py-2",
+    revealIndex: 1,
   },
   {
     label: "Cloud Migration",
@@ -103,6 +105,7 @@ export const capabilitiesUseCasePills: readonly CapabilityPill[] = [
     positionClassName: "left-[352.59px] bottom-[353.86px]",
     gradient: capabilityPillGradient(-73.02),
     pyClassName: "py-2",
+    revealIndex: 5,
   },
   {
     label: "Cloud Modernization",
@@ -113,6 +116,7 @@ export const capabilitiesUseCasePills: readonly CapabilityPill[] = [
     positionClassName: "left-[60.59px] bottom-[180.58px]",
     gradient: capabilityPillGradient(-70.86),
     pyClassName: "py-2.5",
+    revealIndex: 6,
   },
   {
     label: "Kubernetes Management",
@@ -123,6 +127,7 @@ export const capabilitiesUseCasePills: readonly CapabilityPill[] = [
     positionClassName: "left-[818.69px] top-[70.65px]",
     gradient: capabilityPillGradient(-68.07),
     pyClassName: "py-2.5",
+    revealIndex: 2,
   },
   {
     label: "Generative AI Launchpad",
@@ -133,6 +138,7 @@ export const capabilitiesUseCasePills: readonly CapabilityPill[] = [
     positionClassName: "right-[39.83px] bottom-[359.31px]",
     gradient: capabilityPillGradient(-67.56),
     pyClassName: "py-2",
+    revealIndex: 3,
   },
   {
     label: "Well-Architected Reviews",
@@ -143,6 +149,7 @@ export const capabilitiesUseCasePills: readonly CapabilityPill[] = [
     positionClassName: "right-[19.83px] bottom-[169.31px]",
     gradient: capabilityPillGradient(-67.41),
     pyClassName: "py-2",
+    revealIndex: 4,
   },
 ] as const;
 
@@ -157,6 +164,7 @@ export const capabilitiesServicesPills: readonly CapabilityPill[] = [
     positionClassName: "left-[192.59px] top-[46.35px]",
     gradient: PILL_GRADIENT_DEFAULT,
     pyClassName: "py-2",
+    revealIndex: 1,
   },
   {
     label: "24×7 Personalized Cloud Support",
@@ -167,6 +175,7 @@ export const capabilitiesServicesPills: readonly CapabilityPill[] = [
     positionClassName: "left-[352.59px] bottom-[353.86px]",
     gradient: PILL_GRADIENT_DEFAULT,
     pyClassName: "py-2",
+    revealIndex: 5,
   },
   {
     label: "CloudKeeper Prism",
@@ -177,6 +186,7 @@ export const capabilitiesServicesPills: readonly CapabilityPill[] = [
     positionClassName: "left-[60.59px] bottom-[180.58px]",
     gradient: PILL_GRADIENT_DEFAULT,
     pyClassName: "py-2.5",
+    revealIndex: 6,
   },
   {
     label: "Rate & Commitment Optimization",
@@ -187,6 +197,7 @@ export const capabilitiesServicesPills: readonly CapabilityPill[] = [
     positionClassName: "left-[818.69px] top-[70.65px]",
     gradient: PILL_GRADIENT_DEFAULT,
     pyClassName: "py-2.5",
+    revealIndex: 2,
   },
   {
     label: "Cost Anomaly Detection",
@@ -197,6 +208,7 @@ export const capabilitiesServicesPills: readonly CapabilityPill[] = [
     positionClassName: "right-[39.83px] bottom-[359.31px]",
     gradient: PILL_GRADIENT_DEFAULT,
     pyClassName: "py-2",
+    revealIndex: 3,
   },
   {
     label: "Cloud Cost Visibility",
@@ -207,6 +219,7 @@ export const capabilitiesServicesPills: readonly CapabilityPill[] = [
     positionClassName: "right-[19.83px] bottom-[169.31px]",
     gradient: PILL_GRADIENT_DEFAULT,
     pyClassName: "py-2",
+    revealIndex: 4,
   },
 ] as const;
 

@@ -5,6 +5,10 @@ import { useState } from "react";
 
 import { CtaButton } from "@/components/home/primary-button";
 import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
+import {
   platformAddons,
   platformTabIconLayout,
   platformTabsContent,
@@ -192,52 +196,59 @@ function SlideDots({
 
 function ValueAddonsBar() {
   return (
-    <div className="relative flex min-h-[110px] w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-xl px-5 py-4 lg:flex-row lg:gap-10 lg:px-8">
-      <div aria-hidden className="pointer-events-none absolute inset-0 rounded-xl bg-[#f8f6ff]" />
+    <div className="relative w-full overflow-hidden rounded-xl border border-[#e4ecf4] bg-[#f8f6ff]">
       <img
         src={platformsAssets.addonBg}
         alt=""
-        className="pointer-events-none absolute inset-0 size-full rounded-xl object-cover opacity-[0.12]"
+        className="pointer-events-none absolute inset-0 size-full object-cover opacity-[0.08]"
         decoding="async"
         aria-hidden
       />
 
-      <p className="relative z-[1] whitespace-nowrap text-2xl leading-[1.5] tracking-[-1px] text-[#253746]">
-        Exclusive value add-ons at no cost:
-      </p>
+      <div className="relative z-[1] flex flex-col divide-y divide-[#e4ecf4] lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1.5fr)] lg:divide-x lg:divide-y-0">
+        <div className="flex min-h-[88px] items-center px-5 py-4 sm:px-6 lg:px-8 lg:py-5">
+          <p className="text-[15px] font-semibold leading-[1.45] tracking-[-0.02em] text-[#253746] sm:text-base">
+            Exclusive value add-ons
+            <span className="mt-0.5 block text-sm font-normal text-[#64748b]">
+              at no cost
+            </span>
+          </p>
+        </div>
 
-      <div className="relative z-[1] flex flex-col gap-5 lg:flex-row lg:items-center lg:gap-5">
         {platformAddons.map((addon) => (
           <Link
             key={addon.line2}
             href={addon.href}
-            className="group/addon flex items-center gap-5"
+            className="group/addon flex min-h-[88px] items-center gap-4 px-5 py-4 transition-colors duration-200 hover:bg-white/60 sm:gap-5 sm:px-6 lg:px-7 lg:py-5"
           >
-            <span className="relative size-10 shrink-0 rounded-md border border-[#17a5fb]">
-              <img
-                src={addon.icon}
-                alt=""
-                className={cn("block max-w-none", addon.iconClassName)}
-                decoding="async"
-                aria-hidden
-              />
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-[#17a5fb]/25 bg-white shadow-[0_1px_2px_rgba(23,165,251,0.08)]">
+              <span className="relative size-10">
+                <img
+                  src={addon.icon}
+                  alt=""
+                  className={cn("block max-w-none", addon.iconClassName)}
+                  decoding="async"
+                  aria-hidden
+                />
+              </span>
             </span>
-            <span className="relative pr-6 text-[#1d3e69]">
-              <span className="block text-sm leading-[1.3] tracking-[-0.3125px]">
+
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-medium uppercase tracking-[0.06em] text-[#64748b] sm:text-xs">
                 {addon.line1}
               </span>
-              <span className="block text-2xl font-medium leading-[1.3] tracking-[-0.3125px]">
+              <span className="mt-1 flex items-center gap-2 text-base font-semibold leading-tight tracking-[-0.02em] text-[#1d3e69] sm:text-lg">
                 {addon.line2}
+                <img
+                  src={addon.arrow}
+                  alt=""
+                  width={10}
+                  height={10}
+                  className="size-[9px] shrink-0 opacity-70 transition-all duration-200 group-hover/addon:translate-x-0.5 group-hover/addon:opacity-100"
+                  decoding="async"
+                  aria-hidden
+                />
               </span>
-              <img
-                src={addon.arrow}
-                alt=""
-                width={10}
-                height={10}
-                className="absolute right-0 top-[calc(50%+4px)] size-[9.332px] -translate-y-1/2 transition-transform duration-200 group-hover/addon:translate-x-0.5"
-                decoding="async"
-                aria-hidden
-              />
             </span>
           </Link>
         ))}
@@ -266,9 +277,8 @@ export function PlatformsSection() {
       aria-labelledby="platforms-heading"
     >
       <div className="mx-auto w-full max-w-[1440px] px-5 py-16 sm:px-8 lg:px-[90px] lg:py-[90px]">
-        <div className="mx-auto flex max-w-[1260px] flex-col items-center gap-[30px]">
-          {/* Title bar — Figma 2987:24272 */}
-          <div className="flex max-w-[1170px] flex-col items-center gap-5 text-center text-black">
+        <ScrollRevealGroup className="mx-auto flex max-w-[1260px] flex-col items-center gap-[30px]">
+          <ScrollRevealItem className="flex max-w-[1170px] flex-col items-center gap-5 text-center text-black">
             <h2
               id="platforms-heading"
               className="w-full text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.5] tracking-[-1px] lg:text-[40px]"
@@ -279,9 +289,9 @@ export function PlatformsSection() {
               Complete visibility, intelligent optimization, and measurable ROI - in one
               unified platform, backed by unlimited support by cloud experts
             </p>
-          </div>
+          </ScrollRevealItem>
 
-          <div className="flex w-full flex-col gap-10 rounded-xl">
+          <ScrollRevealItem className="flex w-full flex-col gap-10 rounded-xl">
             {/* Tab bar — Figma 2987:24276 */}
             <div
               className="flex flex-col items-stretch justify-center sm:flex-row"
@@ -332,10 +342,12 @@ export function PlatformsSection() {
                 onSelectSlide={setActiveSlide}
               />
             </div>
-          </div>
+          </ScrollRevealItem>
 
-          <ValueAddonsBar />
-        </div>
+          <ScrollRevealItem className="w-full">
+            <ValueAddonsBar />
+          </ScrollRevealItem>
+        </ScrollRevealGroup>
       </div>
     </section>
   );

@@ -12,6 +12,10 @@ import {
 } from "react";
 
 import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
+import {
   PRESS_CARD_GAP,
   PRESS_CARD_HEIGHT,
   PRESS_CARD_HOVER_BORDER_GRADIENT,
@@ -222,8 +226,8 @@ export function PressLogosSection() {
       style={{ background: PRESS_LOGOS_BG }}
       aria-labelledby="press-logos-heading"
     >
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-6 pb-[70px] pt-16 lg:gap-[40px] lg:px-10 lg:pt-20">
-        <div className="flex items-center justify-between gap-6">
+      <ScrollRevealGroup className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-6 pb-[70px] pt-16 lg:gap-[40px] lg:px-10 lg:pt-20">
+        <ScrollRevealItem className="flex items-center justify-between gap-6">
           <h2
             id="press-logos-heading"
             className="text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.5] tracking-[-1px] text-black"
@@ -232,7 +236,6 @@ export function PressLogosSection() {
           </h2>
           <Link
             href={viewAllHref}
-            data-cursor-label="read here"
             className="group/view-all inline-flex shrink-0 items-center gap-1.5 text-base font-medium tracking-[-0.048px] text-[#17a5fb] transition-colors duration-200 hover:text-[#0e95ea]"
           >
             <span className="underline-offset-[6px] group-hover/view-all:underline">
@@ -248,66 +251,70 @@ export function PressLogosSection() {
               aria-hidden
             />
           </Link>
-        </div>
+        </ScrollRevealItem>
 
-        <div
-          ref={viewportRef}
-          className="relative w-full overflow-hidden"
-          style={{ height: PRESS_CARD_HEIGHT + 3 }}
-        >
-          <motion.div
-            className="flex will-change-transform"
-            initial={false}
-            style={{ gap: PRESS_CARD_GAP }}
-            animate={{ x: cardStep > 0 ? -scrollOffset : 0 }}
-            transition={
-              transitionEnabled ? PRESS_CAROUSEL_TRANSITION : { duration: 0 }
-            }
-            onAnimationComplete={handleAnimationComplete}
+        <ScrollRevealItem>
+          <div
+            ref={viewportRef}
+            className="relative w-full overflow-hidden"
+            style={{ height: PRESS_CARD_HEIGHT + 3 }}
           >
-            {loopItems.map((item, index) => (
-              <PressCard
-                key={`${item.id}-${index}`}
-                item={item}
-                width={cardWidth || 1}
-              />
-            ))}
-          </motion.div>
-        </div>
-
-        <div className="relative flex h-[50px] items-center justify-center">
-          <div className="flex items-center gap-1 px-3">
-            {Array.from({ length: dotCount }, (_, index) => (
-              <button
-                key={index}
-                type="button"
-                aria-label={`Go to slide ${index + 1}`}
-                aria-current={index === activeDot ? "true" : undefined}
-                onClick={() => goToPage(index)}
-                className={cn(
-                  "rounded-full transition-all duration-200",
-                  index === activeDot
-                    ? "h-1.5 w-5 bg-[#17a5fb]"
-                    : "size-1.5 bg-[#a0d1f1] opacity-60",
-                )}
-              />
-            ))}
+            <motion.div
+              className="flex will-change-transform"
+              initial={false}
+              style={{ gap: PRESS_CARD_GAP }}
+              animate={{ x: cardStep > 0 ? -scrollOffset : 0 }}
+              transition={
+                transitionEnabled ? PRESS_CAROUSEL_TRANSITION : { duration: 0 }
+              }
+              onAnimationComplete={handleAnimationComplete}
+            >
+              {loopItems.map((item, index) => (
+                <PressCard
+                  key={`${item.id}-${index}`}
+                  item={item}
+                  width={cardWidth || 1}
+                />
+              ))}
+            </motion.div>
           </div>
+        </ScrollRevealItem>
 
-          <div className="absolute right-0 flex items-center gap-4">
-            <CarouselArrow
-              direction="prev"
-              label="Previous press stories"
-              onClick={goPrev}
-            />
-            <CarouselArrow
-              direction="next"
-              label="Next press stories"
-              onClick={goNext}
-            />
+        <ScrollRevealItem>
+          <div className="relative flex h-[50px] items-center justify-center">
+            <div className="flex items-center gap-1 px-3">
+              {Array.from({ length: dotCount }, (_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  aria-label={`Go to slide ${index + 1}`}
+                  aria-current={index === activeDot ? "true" : undefined}
+                  onClick={() => goToPage(index)}
+                  className={cn(
+                    "rounded-full transition-all duration-200",
+                    index === activeDot
+                      ? "h-1.5 w-5 bg-[#17a5fb]"
+                      : "size-1.5 bg-[#a0d1f1] opacity-60",
+                  )}
+                />
+              ))}
+            </div>
+
+            <div className="absolute right-0 flex items-center gap-4">
+              <CarouselArrow
+                direction="prev"
+                label="Previous press stories"
+                onClick={goPrev}
+              />
+              <CarouselArrow
+                direction="next"
+                label="Next press stories"
+                onClick={goNext}
+              />
+            </div>
           </div>
-        </div>
-      </div>
+        </ScrollRevealItem>
+      </ScrollRevealGroup>
     </section>
   );
 }

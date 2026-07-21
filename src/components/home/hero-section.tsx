@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { PrimaryButton } from "@/components/home/primary-button";
 import { homeAssets } from "@/config/home-assets";
@@ -13,6 +14,7 @@ function ServiceChip({
   iconWidth = 30,
   iconHeight = 30,
   iconBgRadius = "rounded-[9px]",
+  revealIndex,
   className,
   style,
 }: {
@@ -21,14 +23,16 @@ function ServiceChip({
   iconWidth?: number;
   iconHeight?: number;
   iconBgRadius?: "rounded-[6px]" | "rounded-[9px]";
+  revealIndex?: number;
   className?: string;
   style?: React.CSSProperties;
 }) {
   return (
     <div
       style={style}
+      data-reveal={revealIndex}
       className={cn(
-        "absolute flex h-14 w-max shrink-0 items-center gap-2.5 rounded-[6px] bg-white py-1.5 pl-2 pr-[11px] font-sans shadow-[0_4px_15.95px_rgba(0,0,0,0.1)]",
+        "hero-service-chip absolute flex h-14 w-max shrink-0 items-center gap-2.5 rounded-[6px] bg-white py-1.5 pl-2 pr-[11px] font-sans shadow-[0_4px_15.95px_rgba(0,0,0,0.1)]",
         className,
       )}
     >
@@ -95,6 +99,18 @@ export function HeroSection() {
   const outerRadius = 480.598;
   const innerDotAngle = -73.15;
   const outerDotAngle = 173.85;
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      setVisible(true);
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <section className="relative isolate flex w-full flex-col items-center overflow-hidden bg-white pt-[60px] pb-5 font-sans lg:pb-5">
@@ -115,12 +131,17 @@ export function HeroSection() {
           />
         </div>
 
-        {/* Foreground content */}
-        <div className="relative z-[2] h-[671px] w-full overflow-visible">
-          {/* Orbit rings — shifted up for semi-circle arc feel */}
+        {/* Foreground content — single orbit container like cloudkeeper.com */}
+        <div
+          className={cn(
+            "hero-orbit-container relative z-[2] h-[671px] w-full overflow-visible",
+            visible && "is-visible",
+          )}
+        >
+          {/* Orbit rings */}
           <div className="pointer-events-none absolute left-1/2 top-[-25px] h-[671px] w-[988px] -translate-x-1/2">
-            {/* Big outer ring — back layer */}
-            <div className="absolute left-1/2 top-[calc(50%-203.5px)] flex size-[987.998px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+            {/* Big outer solid ring — pop-in only, no rotation */}
+            <div className="hero-ring hero-ring--solid flex size-[987.998px] items-center justify-center">
               <div className="rotate-[1.53deg]">
                 <Image
                   src={homeAssets.orbitRing}
@@ -133,8 +154,8 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Small dashed inner ring — on top of big ring */}
-            <div className="absolute left-1/2 top-[calc(50%-203.5px)] z-[1] size-[622.284px] -translate-x-1/2 -translate-y-1/2">
+            {/* Inner dashed ring — scale-in then slow 60s rotation */}
+            <div className="hero-ring hero-ring--dashed z-[1] size-[622.284px]">
               <Image
                 src={homeAssets.orbitInner}
                 alt=""
@@ -145,7 +166,7 @@ export function HeroSection() {
               />
             </div>
 
-            {/* Dots snapped to ring paths */}
+            {/* Dots fixed on ring paths (dashed pattern rotates beneath them) */}
             <div className="absolute left-1/2 top-[calc(50%-203.5px)] z-[2] size-0 -translate-x-1/2 -translate-y-1/2">
               <OrbitDot
                 radius={innerRadius}
@@ -164,7 +185,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Service chips — Figma nested pointer groups */}
+          {/* Service chips — Figma nested pointer groups (live-site layout) */}
           <div className="absolute left-[74px] top-[15px] z-[3]">
             <div className="absolute left-0 top-0 h-[611px] w-[431px]">
               {heroServices
@@ -177,6 +198,7 @@ export function HeroSection() {
                     iconWidth={service.iconWidth}
                     iconHeight={service.iconHeight}
                     iconBgRadius={service.iconBgRadius}
+                    revealIndex={service.revealIndex}
                     style={{ left: service.left, top: service.top }}
                   />
                 ))}
@@ -192,6 +214,7 @@ export function HeroSection() {
                     iconWidth={service.iconWidth}
                     iconHeight={service.iconHeight}
                     iconBgRadius={service.iconBgRadius}
+                    revealIndex={service.revealIndex}
                     style={{ left: service.left, top: service.top }}
                   />
                 ))}

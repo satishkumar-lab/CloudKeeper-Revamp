@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   capabilitiesAssets,
@@ -12,6 +12,7 @@ import {
   type CapabilityIconLayoutId,
   type CapabilityPill,
 } from "@/config/capabilities-section";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 
 const SECTION_BG =
@@ -89,8 +90,9 @@ function CapabilityPillChip({ pill }: { pill: CapabilityPill }) {
   return (
     <Link
       href={pill.href}
+      data-reveal={pill.revealIndex}
       className={cn(
-        "absolute max-w-[380px] rounded-[100px] bg-white p-1",
+        "caps-pill-chip absolute max-w-[380px] rounded-[100px] bg-white p-1",
         "shadow-[0px_4px_6px_rgba(0,0,0,0.05)] transition-transform duration-200 hover:scale-[1.02]",
         pill.positionClassName,
       )}
@@ -112,12 +114,27 @@ function CapabilityPillChip({ pill }: { pill: CapabilityPill }) {
   );
 }
 
-function CapabilitiesIllustration({ pills }: { pills: readonly CapabilityPill[] }) {
+function CapabilitiesIllustration({
+  pills,
+  orbitVisible,
+  pillsVisible,
+}: {
+  pills: readonly CapabilityPill[];
+  orbitVisible: boolean;
+  pillsVisible: boolean;
+}) {
   return (
     <div className="relative h-[581px] w-full shrink-0">
       {/* Figma 8298:8778 — Illustration Container 1260×602, offset left 66px top 10px */}
       <div className="flex justify-center pt-[10px] lg:justify-start lg:pl-[66px]">
-        <div className="relative h-[602px] w-[1260px] shrink-0 origin-top scale-[min(1,calc((100vw-48px)/1260))] lg:scale-100">
+        <div
+          className={cn(
+            "relative h-[602px] w-[1260px] shrink-0 origin-top scale-[min(1,calc((100vw-48px)/1260))] lg:scale-100",
+            "caps-orbit-container",
+            orbitVisible && "is-visible",
+            pillsVisible && "pills-visible",
+          )}
+        >
         {/* Blue glow — 8298:8779 */}
         <div
           className="pointer-events-none absolute left-[31.71%] top-[calc(50%-3px)] aspect-[323.59/371.95] w-[17.15%] -translate-y-1/2"
@@ -141,10 +158,10 @@ function CapabilitiesIllustration({ pills }: { pills: readonly CapabilityPill[] 
         {/* Background gradient circles — 8298:8781 */}
         <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 w-[1024px] -translate-x-1/2">
           <div className="absolute left-[-23.93px] top-[-63.66px] size-[1072.2px]">
-            <div className="absolute left-1/2 top-1/2 size-[912.863px] -translate-x-1/2 -translate-y-1/2 rounded-full border-8 border-[#f4f1ff]" />
-            <div className="absolute left-1/2 top-1/2 size-[744.581px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[#dedede]" />
-            <div className="absolute left-1/2 top-1/2 size-[383.518px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[#dedede]" />
-            <div className="absolute left-1/2 top-1/2 size-[596.369px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#dedede]" />
+            <div className="caps-ring caps-ring--solid size-[912.863px] rounded-full border-8 border-[#f4f1ff]" />
+            <div className="caps-ring caps-ring--dashed size-[744.581px] rounded-full border border-dashed border-[#dedede]" />
+            <div className="caps-ring caps-ring--dashed-2 size-[383.518px] rounded-full border border-dashed border-[#dedede]" />
+            <div className="caps-ring caps-ring--light size-[596.369px] rounded-full border border-[#dedede]" />
           </div>
 
           {/* Center logo — 8298:8786 */}
@@ -172,11 +189,30 @@ function CapabilitiesIllustration({ pills }: { pills: readonly CapabilityPill[] 
 /** Figma 8298:8762 — card: capabilities_cloud lifecycle */
 export function CapabilitiesSection() {
   const [activeTab, setActiveTab] = useState<CapabilitiesTabId>("useCase");
+  const [pillsVisible, setPillsVisible] = useState(false);
+  const [orbitTarget, setOrbitTarget] = useState<HTMLElement | null>(null);
   const pills = capabilitiesPillsByTab[activeTab];
+
+  const orbitVisible = useScrollReveal(orbitTarget, {
+    threshold: 0.2,
+    once: true,
+  });
+
+  useEffect(() => {
+    if (!orbitVisible) {
+      setPillsVisible(false);
+      return;
+    }
+
+    setPillsVisible(false);
+    const frame = requestAnimationFrame(() => setPillsVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, [activeTab, orbitVisible]);
 
   return (
     <section
       id="capabilities"
+      ref={setOrbitTarget}
       className="relative overflow-hidden font-sans"
       style={{ backgroundImage: SECTION_BG }}
       aria-labelledby="capabilities-heading"
@@ -223,7 +259,11 @@ export function CapabilitiesSection() {
           </div>
         </div>
 
-        <CapabilitiesIllustration pills={pills} />
+        <CapabilitiesIllustration
+          pills={pills}
+          orbitVisible={orbitVisible}
+          pillsVisible={pillsVisible}
+        />
       </div>
     </section>
   );

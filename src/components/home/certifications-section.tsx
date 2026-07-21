@@ -12,6 +12,10 @@ import {
 } from "react";
 
 import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
+import {
   CERT_BADGE_GAP,
   CERT_BADGE_HEIGHT,
   CERT_BADGE_SLOT_WIDTH,
@@ -490,15 +494,17 @@ export function CertificationsSection() {
         </div>
       </div>
 
-      <div className="relative z-[1] mx-auto flex w-full max-w-[1440px] flex-col items-center px-6 pb-[130px] pt-[100px] lg:px-[116px]">
-        <h2
-          id="certifications-heading"
-          className="max-w-[1208px] text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.5] tracking-[-1px] text-black lg:text-[40px]"
-        >
-          {heading}
-        </h2>
+      <ScrollRevealGroup className="relative z-[1] mx-auto flex w-full max-w-[1440px] flex-col items-center px-6 pb-[130px] pt-[100px] lg:px-[116px]">
+        <ScrollRevealItem>
+          <h2
+            id="certifications-heading"
+            className="max-w-[1208px] text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.5] tracking-[-1px] text-black lg:text-[40px]"
+          >
+            {heading}
+          </h2>
+        </ScrollRevealItem>
 
-        <div className="relative mt-[59px] w-full max-w-[1208px]">
+        <ScrollRevealItem className="relative mt-[59px] w-full max-w-[1208px]">
           <div
             className="relative"
             style={{
@@ -569,8 +575,8 @@ export function CertificationsSection() {
               onClick={goNext}
             />
           </div>
-        </div>
-      </div>
+        </ScrollRevealItem>
+      </ScrollRevealGroup>
     </section>
   );
 }

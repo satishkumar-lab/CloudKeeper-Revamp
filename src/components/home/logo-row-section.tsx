@@ -1,6 +1,10 @@
 "use client";
 
 import { logoRowAssets } from "@/config/logo-row";
+import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
 import { cn } from "@/lib/utils";
 
 /** Figma 8251:20339 — G2 trust block */
@@ -102,20 +106,24 @@ export function LogoRowSection() {
   return (
     <section className="bg-white font-sans" aria-label="Trusted by customers">
       {/* Desktop — Figma logo-row 8251:20338 (1439×151) */}
-      <div className="mx-auto hidden w-full max-w-[1440px] items-center justify-between px-20 py-10 lg:flex">
-        <G2TrustBadge />
-        <LogoMarquee />
-      </div>
+      <ScrollRevealGroup className="mx-auto hidden w-full max-w-[1440px] items-center justify-between px-20 py-10 lg:flex">
+        <ScrollRevealItem>
+          <G2TrustBadge />
+        </ScrollRevealItem>
+        <ScrollRevealItem>
+          <LogoMarquee />
+        </ScrollRevealItem>
+      </ScrollRevealGroup>
 
       {/* Mobile / tablet */}
-      <div className="flex flex-col gap-4 px-5 py-10 sm:px-8 lg:hidden">
-        <div className="flex justify-center">
+      <ScrollRevealGroup className="flex flex-col gap-4 px-5 py-10 sm:px-8 lg:hidden">
+        <ScrollRevealItem className="flex justify-center">
           <G2TrustBadge className="border-r-0 pr-0" />
-        </div>
-        <div className="w-full overflow-hidden">
+        </ScrollRevealItem>
+        <ScrollRevealItem className="w-full overflow-hidden">
           <LogoMarquee className="mx-auto max-w-full" />
-        </div>
-      </div>
+        </ScrollRevealItem>
+      </ScrollRevealGroup>
     </section>
   );
 }

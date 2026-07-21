@@ -78,7 +78,7 @@ export function CtaButton({
 
   if (href && !onClick && type === "button") {
     return (
-      <Link href={href} className={classes} data-cursor-label="click here">
+      <Link href={href} className={classes}>
         {content}
       </Link>
     );
@@ -90,7 +90,6 @@ export function CtaButton({
       className={classes}
       onClick={onClick}
       disabled={disabled}
-      data-cursor-label="click here"
     >
       {content}
     </button>

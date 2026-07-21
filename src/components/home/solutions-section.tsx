@@ -1,5 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
+import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
 import {
   solutionAddons,
   solutionCards,
@@ -196,22 +202,26 @@ export function SolutionsSection() {
       aria-labelledby="solutions-heading"
     >
       <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-16 sm:px-8 lg:px-[110px] lg:pb-[62px] lg:pt-20">
-        <h2
-          id="solutions-heading"
-          className="mx-auto max-w-[1220px] text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.3] tracking-[-0.5px] text-black lg:text-[40px]"
-        >
-          Cloud Cost Optimisation Solutions Built for Scale
-        </h2>
+        <ScrollRevealGroup className="mx-auto max-w-[1220px]">
+          <ScrollRevealItem>
+            <h2
+              id="solutions-heading"
+              className="text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.3] tracking-[-0.5px] text-black lg:text-[40px]"
+            >
+              Cloud Cost Optimisation Solutions Built for Scale
+            </h2>
+          </ScrollRevealItem>
 
-        <div className="mx-auto mt-10 grid max-w-[1220px] gap-7 lg:grid-cols-2">
-          {solutionCards.map((card) => (
-            <SolutionCard key={card.id} {...card} />
-          ))}
-        </div>
+          <ScrollRevealItem className="mt-10 grid gap-7 lg:grid-cols-2">
+            {solutionCards.map((card) => (
+              <SolutionCard key={card.id} {...card} />
+            ))}
+          </ScrollRevealItem>
 
-        <div className="mx-auto mt-10 max-w-[1220px]">
-          <AddonsBar />
-        </div>
+          <ScrollRevealItem className="mt-10">
+            <AddonsBar />
+          </ScrollRevealItem>
+        </ScrollRevealGroup>
       </div>
     </section>
   );

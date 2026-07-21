@@ -152,11 +152,20 @@
   }
 
   .site-footer .footer-nav-link,
-  .site-footer .footer-nav-link:hover,
-  .site-footer .footer-nav-link:focus-visible,
   .site-footer .footer-nav-link:visited {
     color: #1d3e69;
     text-decoration: none;
+    transition:
+      color 0.2s ease,
+      text-decoration-color 0.2s ease;
+  }
+
+  .site-footer .footer-nav-link:hover,
+  .site-footer .footer-nav-link:focus-visible {
+    color: #17a5fb;
+    text-decoration: underline;
+    text-decoration-color: #17a5fb;
+    text-underline-offset: 3px;
   }
 }
 
@@ -172,4 +181,361 @@
 /* Logo row — pause marquee on hover */
 .group\/marquee:hover .logo-marquee-track {
   animation-play-state: paused;
+}
+
+/* ── cloudkeeper.com hero orbit (inner dashed ring rotates, outer solid pops in) ── */
+@keyframes cloudHeroSolidRingIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes cloudHeroRotateRing {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+  }
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 75% 50%;
+  }
+  100% {
+    background-position: 100% 75%;
+  }
+}
+
+@keyframes str-reveal-ltr {
+  0% {
+    opacity: 0;
+    transform: translateX(-0.4em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes str-reveal-rtl {
+  0% {
+    opacity: 0;
+    transform: translateX(0.4em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-orbit-container {
+  --cloud-hero-ring-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  transform: translateY(80px) scale(0.92);
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+}
+
+.hero-orbit-container.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-ring {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 203.5px);
+  transform: translate(-50%, -50%);
+}
+
+.hero-ring--solid {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.hero-orbit-container.is-visible .hero-ring--solid {
+  animation: cloudHeroSolidRingIn 1.2s var(--cloud-hero-ring-pop) forwards;
+}
+
+.hero-ring--dashed {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    transform 1.2s var(--cloud-hero-ring-pop) 80ms,
+    opacity 1.2s var(--cloud-hero-ring-pop) 80ms;
+  will-change: transform, opacity;
+}
+
+.hero-orbit-container.is-visible .hero-ring--dashed {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: cloudHeroRotateRing 60s linear 0.78s infinite;
+}
+
+.hero-service-chip {
+  opacity: 0;
+  transform: translateY(60px) scale(0.9);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-orbit-container.is-visible .hero-service-chip {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-service-chip[data-reveal="1"] {
+  transition-delay: 0.7s;
+}
+.hero-service-chip[data-reveal="2"] {
+  transition-delay: 0.85s;
+}
+.hero-service-chip[data-reveal="3"] {
+  transition-delay: 1s;
+}
+.hero-service-chip[data-reveal="4"] {
+  transition-delay: 1.15s;
+}
+.hero-service-chip[data-reveal="5"] {
+  transition-delay: 1.3s;
+}
+.hero-service-chip[data-reveal="6"] {
+  transition-delay: 1.45s;
+}
+.hero-service-chip[data-reveal="7"] {
+  transition-delay: 1.6s;
+}
+
+.statement-gradient-text {
+  display: inline-block;
+  background: linear-gradient(
+      90deg,
+      #17a5fb 0%,
+      #9a4bff 35%,
+      #ed0082 50%,
+      #9a4bff 75%,
+      #17a5fb 100%
+    )
+    0% 50% / 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 4s linear infinite reverse;
+}
+
+.span-text-reveal {
+  --str-reveal-duration: 1s;
+}
+
+.span-text-reveal span {
+  display: inline-block;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.span-text-reveal.is-active.span-text-reveal--ltr span {
+  animation-name: str-reveal-ltr;
+  animation-duration: var(--str-reveal-duration);
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: forwards;
+  animation-delay: calc(
+    var(--str-reveal-start-delay, 0s) + var(--i, 0) * var(--str-reveal-step, 0.09s)
+  );
+}
+
+.span-text-reveal.is-active.span-text-reveal--rtl span {
+  animation-name: str-reveal-rtl;
+  animation-duration: var(--str-reveal-duration);
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: forwards;
+  animation-delay: calc(
+    var(--str-reveal-start-delay, 0s) +
+      (var(--str-count, 1) - 1 - var(--i, 0)) * var(--str-reveal-step, 0.09s)
+  );
+}
+
+.stat-card-value {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.stat-card-value:has(.is-visible) {
+  opacity: 1;
+}
+
+/* ── cloudkeeper.com capabilities orbit (matches hero pattern) ── */
+@keyframes capsRevampRingPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes capsRevampRotateCw {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+  }
+}
+
+@keyframes capsRevampRotateCcw {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(-360deg);
+  }
+}
+
+.caps-orbit-container {
+  --caps-ring-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.caps-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+
+.caps-orbit-container.is-visible .caps-ring--solid {
+  animation: capsRevampRingPop 1.2s var(--caps-ring-pop) forwards;
+}
+
+.caps-orbit-container.is-visible .caps-ring--light {
+  animation: capsRevampRingPop 1.2s var(--caps-ring-pop) 80ms forwards;
+}
+
+.caps-ring--dashed {
+  transition:
+    transform 1.2s var(--caps-ring-pop) 160ms,
+    opacity 1.2s var(--caps-ring-pop) 160ms;
+  will-change: transform, opacity;
+}
+
+.caps-ring--dashed-2 {
+  transition:
+    transform 1.2s var(--caps-ring-pop) 240ms,
+    opacity 1.2s var(--caps-ring-pop) 240ms;
+  will-change: transform, opacity;
+}
+
+.caps-orbit-container.is-visible .caps-ring--dashed {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: capsRevampRotateCw 60s linear 860ms infinite;
+}
+
+.caps-orbit-container.is-visible .caps-ring--dashed-2 {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: capsRevampRotateCcw 40s linear 940ms infinite;
+}
+
+.caps-pill-chip {
+  opacity: 0;
+  transform: translateY(60px) scale(0.9);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.caps-orbit-container.is-visible.pills-visible .caps-pill-chip {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.caps-pill-chip[data-reveal="1"] {
+  transition-delay: 0.7s;
+}
+.caps-pill-chip[data-reveal="2"] {
+  transition-delay: 0.85s;
+}
+.caps-pill-chip[data-reveal="3"] {
+  transition-delay: 1s;
+}
+.caps-pill-chip[data-reveal="4"] {
+  transition-delay: 1.15s;
+}
+.caps-pill-chip[data-reveal="5"] {
+  transition-delay: 1.3s;
+}
+.caps-pill-chip[data-reveal="6"] {
+  transition-delay: 1.45s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-container,
+  .hero-orbit-container.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-orbit-container.is-visible .hero-ring--solid,
+  .hero-orbit-container.is-visible .hero-ring--dashed {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition: none;
+  }
+
+  .hero-service-chip,
+  .hero-orbit-container.is-visible .hero-service-chip {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .statement-gradient-text {
+    animation: none;
+  }
+
+  .span-text-reveal span {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .stat-card-value,
+  .stat-card-value:has(.is-visible) {
+    opacity: 1;
+    transition: none;
+  }
+
+  .caps-orbit-container.is-visible .caps-ring,
+  .caps-orbit-container.is-visible .caps-ring--dashed,
+  .caps-orbit-container.is-visible .caps-ring--dashed-2 {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition: none;
+  }
+
+  .caps-pill-chip,
+  .caps-orbit-container.is-visible.pills-visible .caps-pill-chip {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

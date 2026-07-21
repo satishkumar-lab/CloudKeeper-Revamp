@@ -5,6 +5,10 @@ import { FormEvent, useState } from "react";
 
 import { CtaArrow } from "@/components/home/primary-button";
 import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
+import {
   NEWSLETTER_BG,
   THOUGHT_LEADERSHIP_BG,
   THOUGHT_LEADERSHIP_GLOW_BOTTOM,
@@ -115,8 +119,6 @@ function ThoughtLeadershipRow({
   return (
     <Link
       href={item.href ?? "#"}
-      data-cursor="read"
-      data-cursor-label="read here"
       className={cn(
         "group flex min-h-[214px] w-full items-center justify-between gap-6 px-[30px] py-[30px] transition-colors hover:bg-white/[0.03]",
         bordered && "border-b border-white/[0.22] pb-[31px]",
@@ -191,7 +193,6 @@ function NewsletterSubscribe() {
           />
           <button
             type="submit"
-            data-cursor-label="click here"
             className="group/cta inline-flex h-[54px] min-w-[180px] items-center justify-center gap-2.5 rounded-b-[100px] bg-[#17a5fb] px-6 py-2.5 text-base font-medium tracking-[-0.44px] text-white transition-colors hover:bg-[#0e95ea] sm:w-[198px] sm:rounded-bl-none sm:rounded-br-[100px] sm:rounded-tr-[100px]"
           >
             {newsletter.submitLabel}
@@ -226,8 +227,8 @@ export function ThoughtLeadershipSection() {
       />
 
       <div className="relative z-[3] mx-auto w-full max-w-[1440px] px-6 pb-[60px] pt-16 lg:px-[100px] lg:pt-20">
-        <div className="flex flex-col gap-[30px]">
-          <div className="flex flex-col gap-2.5 pl-0 lg:pl-[30px]">
+        <ScrollRevealGroup className="flex flex-col gap-[30px]">
+          <ScrollRevealItem className="flex flex-col gap-2.5 pl-0 lg:pl-[30px]">
             <div className="relative flex flex-col gap-4 lg:block">
               <h2
                 id="thought-leadership-heading"
@@ -250,21 +251,25 @@ export function ThoughtLeadershipSection() {
               </Link>
             </div>
             <p className="max-w-[1024px] text-lg leading-[1.5] text-[#d1d5dc]">{subtitle}</p>
-          </div>
+          </ScrollRevealItem>
 
-          <div className="flex flex-col gap-5">
-            <div className="flex w-full flex-col">
-              {thoughtLeadershipItems.map((item, index) => (
-                <ThoughtLeadershipRow
-                  key={item.id}
-                  item={item}
-                  bordered={index < thoughtLeadershipItems.length - 1}
-                />
-              ))}
-            </div>
-            <NewsletterSubscribe />
-          </div>
-        </div>
+          <ScrollRevealGroup className="flex flex-col gap-5">
+            <ScrollRevealItem>
+              <div className="flex w-full flex-col">
+                {thoughtLeadershipItems.map((item, index) => (
+                  <ThoughtLeadershipRow
+                    key={item.id}
+                    item={item}
+                    bordered={index < thoughtLeadershipItems.length - 1}
+                  />
+                ))}
+              </div>
+            </ScrollRevealItem>
+            <ScrollRevealItem>
+              <NewsletterSubscribe />
+            </ScrollRevealItem>
+          </ScrollRevealGroup>
+        </ScrollRevealGroup>
       </div>
     </section>
   );

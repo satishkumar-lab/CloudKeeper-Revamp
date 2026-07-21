@@ -234,7 +234,6 @@ function FooterNewsletter() {
           />
           <button
             type="submit"
-            data-cursor-label="click here"
             className="group/cta inline-flex h-[54px] min-w-[180px] items-center justify-center gap-2.5 rounded-b-[100px] bg-[#17a5fb] px-6 py-2.5 text-base font-medium tracking-[-0.44px] text-white shadow-[0px_8px_16px_rgba(67,152,215,0.4)] transition-colors hover:bg-[#0e95ea] sm:w-[198px] sm:rounded-bl-none sm:rounded-br-[100px] sm:rounded-tr-[100px]"
           >
             {newsletter.submitLabel}

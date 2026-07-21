@@ -1,3 +1,9 @@
+"use client";
+
+import {
+  ScrollRevealGroup,
+  ScrollRevealItem,
+} from "@/components/motion/scroll-reveal-group";
 import {
   INDUSTRY_RECOGNITION_BG,
   industryRecognitionAssets,
@@ -239,34 +245,40 @@ export function IndustryRecognitionSection() {
         </div>
       </div>
 
-      <div className="relative z-[1] mx-auto w-full max-w-[1440px] px-6 pb-0 pt-12 lg:h-[565px] lg:px-0 lg:pt-0">
-        <h2
-          id="industry-recognition-heading"
-          className="mx-auto max-w-[767px] text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.3] tracking-[-1px] text-black lg:absolute lg:left-1/2 lg:top-[158px] lg:w-[767px] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:text-[40px]"
-        >
-          {heading}
-        </h2>
+      <ScrollRevealGroup className="relative z-[1] mx-auto w-full max-w-[1440px] px-6 pb-0 pt-12 lg:h-[565px] lg:px-0 lg:pt-0">
+        <ScrollRevealItem>
+          <h2
+            id="industry-recognition-heading"
+            className="mx-auto max-w-[767px] text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.3] tracking-[-1px] text-black lg:absolute lg:left-1/2 lg:top-[158px] lg:w-[767px] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:text-[40px]"
+          >
+            {heading}
+          </h2>
+        </ScrollRevealItem>
 
         {/* Mobile / tablet grid */}
-        <div
-          className="mt-[50px] border-y border-[#d9dfe0] lg:hidden"
-          style={{ borderTopWidth: "0.7px", borderBottomWidth: "0.7px" }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2">
-            <RecognitionGrid bordered />
+        <ScrollRevealItem className="mt-[50px] lg:hidden">
+          <div
+            className="border-y border-[#d9dfe0]"
+            style={{ borderTopWidth: "0.7px", borderBottomWidth: "0.7px" }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              <RecognitionGrid bordered />
+            </div>
           </div>
-        </div>
-      </div>
+        </ScrollRevealItem>
+      </ScrollRevealGroup>
 
       {/* Desktop grid — full viewport width, no side gaps */}
-      <div
-        className="absolute inset-x-0 top-[310px] z-[1] hidden w-full border-y border-[#d9dfe0] lg:block"
-        style={{ borderTopWidth: "0.7px", borderBottomWidth: "0.7px" }}
-      >
-        <div className="flex h-[255px] w-full">
-          <RecognitionGrid bordered cardClassName="min-w-0 flex-1" />
-        </div>
-      </div>
+      <ScrollRevealGroup className="absolute inset-x-0 top-[310px] z-[1] hidden w-full lg:block">
+        <ScrollRevealItem>
+          <div
+            className="flex h-[255px] w-full border-y border-[#d9dfe0]"
+            style={{ borderTopWidth: "0.7px", borderBottomWidth: "0.7px" }}
+          >
+            <RecognitionGrid bordered cardClassName="min-w-0 flex-1" />
+          </div>
+        </ScrollRevealItem>
+      </ScrollRevealGroup>
     </section>
   );
 }

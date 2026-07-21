@@ -21,6 +21,7 @@ export const heroServices = [
     top: 210,
     iconWidth: 30,
     iconHeight: 30,
+    revealIndex: 1,
   },
   {
     label: "Cloud Cost\nVisibility & Analytics",
@@ -30,6 +31,7 @@ export const heroServices = [
     top: 370,
     iconWidth: 30,
     iconHeight: 30,
+    revealIndex: 5,
   },
   {
     label: "24 x 7 Unlimited\nCloud Support",
@@ -40,6 +42,7 @@ export const heroServices = [
     iconWidth: 20,
     iconHeight: 22.223,
     iconBgRadius: "rounded-[6px]" as const,
+    revealIndex: 7,
   },
   {
     label: "Multi-Cloud\nGovernance",
@@ -50,6 +53,7 @@ export const heroServices = [
     iconWidth: 21,
     iconHeight: 22,
     iconBgRadius: "rounded-[6px]" as const,
+    revealIndex: 2,
   },
   {
     label: "Kubernetes\nCost Management",
@@ -59,6 +63,7 @@ export const heroServices = [
     top: 237,
     iconWidth: 25.607,
     iconHeight: 24.7,
+    revealIndex: 3,
   },
   {
     label: "Rate & Commitment\nOptimization",
@@ -68,6 +73,7 @@ export const heroServices = [
     top: 338,
     iconWidth: 28.607,
     iconHeight: 22.138,
+    revealIndex: 4,
   },
   {
     label: "FinOps for AI",
@@ -77,6 +83,7 @@ export const heroServices = [
     top: 483,
     iconWidth: 22.696,
     iconHeight: 22.694,
+    revealIndex: 6,
   },
 ];
 

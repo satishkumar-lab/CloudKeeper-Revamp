@@ -9,6 +9,7 @@ import {
   testimonialsContent,
   type TestimonialItem,
 } from "@/config/testimonials-section";
+import { SpanTextReveal } from "@/components/motion/span-text-reveal";
 
 /** Equal vertical line length above/below carousel controls */
 const CAROUSEL_DIVIDER_LENGTH = 300;
@@ -115,7 +116,9 @@ function AuthorBlock({ name, role }: { name: string; role: string }) {
           />
         </div>
         <p className="relative z-10 shrink-0 bg-white pl-1 text-right text-[26px] font-medium leading-[1.5] tracking-[-0.5px] text-[#17a5fb]">
-          {name}
+          <SpanTextReveal key={name} direction="rtl">
+            {name}
+          </SpanTextReveal>
         </p>
       </div>
       <p className="relative z-10 w-full bg-white text-right text-[22px] leading-[1.5] text-[#253746]">
@@ -160,8 +163,6 @@ function TestimonialPortrait({ item }: { item: TestimonialItem }) {
       {item.videoHref ? (
         <Link
           href={item.videoHref}
-          data-cursor="watch"
-          data-cursor-label="watch here"
           className="absolute bottom-[60px] right-[51px] flex size-[62px] items-center justify-center rounded-[33px] bg-gradient-to-r from-[#3c7abd] to-[#ed0082] shadow-[inset_0px_2.385px_4.77px_rgba(0,0,0,0.05)]"
           aria-label={`Play ${item.name} video`}
         >

@@ -15,73 +15,38 @@ import { StatementSection } from "@/components/home/statement-section";
 import { StatsSection } from "@/components/home/stats-section";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { ThoughtLeadershipSection } from "@/components/home/thought-leadership-section";
-import { CaptionCursor } from "@/components/motion/caption-cursor";
-import { SectionHoverReveal } from "@/components/motion/section-hover-reveal";
+import { ScrollReveal } from "@/components/motion/scroll-reveal";
 
-/** Homepage — cursor-hover section reveals + smooth custom cursor */
 export function MarketingHomeContent() {
   return (
     <>
-      <CaptionCursor />
       <SiteHeader />
 
       <main className="bg-white">
-        <SectionHoverReveal immediate>
-          <HeroSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <LogoRowSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <StatementSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <StatsSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <SolutionsSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <PlatformsSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
+        <HeroSection />
+        <LogoRowSection />
+        <StatementSection />
+        <StatsSection />
+        <SolutionsSection />
+        <PlatformsSection />
+        <ScrollReveal variant="fade">
           <CapabilitiesSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
+        </ScrollReveal>
+        <ScrollReveal variant="fade">
           <TestimonialsSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <ThoughtLeadershipSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <IndustryRecognitionSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <PressLogosSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
-          <CertificationsSection />
-        </SectionHoverReveal>
-
-        <SectionHoverReveal>
+        </ScrollReveal>
+        <ThoughtLeadershipSection />
+        <IndustryRecognitionSection />
+        <PressLogosSection />
+        <CertificationsSection />
+        <ScrollReveal variant="fade">
           <ContactSection />
-        </SectionHoverReveal>
+        </ScrollReveal>
       </main>
 
-      <SectionHoverReveal>
+      <ScrollReveal variant="up">
         <SiteFooter />
-      </SectionHoverReveal>
+      </ScrollReveal>
     </>
   );
 }

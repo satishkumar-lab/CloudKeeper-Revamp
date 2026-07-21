@@ -3,11 +3,11 @@ import type { Variants } from "framer-motion";
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 48 },
+  hidden: { opacity: 0, y: 34 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: revealEase },
+    transition: { duration: 0.6, ease: revealEase },
   },
 };
 
@@ -51,18 +51,18 @@ export const staggerContainer: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.08,
+      staggerChildren: 0.08,
+      delayChildren: 0.06,
     },
   },
 };
 
 export const fadeIn: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: revealEase },
+    transition: { duration: 0.55, ease: revealEase },
   },
 };
 
