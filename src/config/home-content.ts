@@ -2,7 +2,7 @@ import { homeAssets } from "@/config/home-assets";
 import { routes } from "@/config/routes";
 
 export const navLinks = [
-  { label: "Why Us?", href: "#why-us", hasDropdown: false },
+  { label: "Why Us?", href: routes.whyUs, hasDropdown: false },
   { label: "Solutions", href: "#solutions", hasDropdown: true },
   { label: "Platforms", href: "#platforms", hasDropdown: true },
   { label: "Capabilities", href: "#capabilities", hasDropdown: true },

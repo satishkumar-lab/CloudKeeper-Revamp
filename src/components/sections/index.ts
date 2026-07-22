@@ -22,6 +22,10 @@ export {
   type LightBannerCtaSectionProps,
 } from "@/components/sections/light-banner-cta-section";
 export {
+  DarkBannerCtaSection,
+  type DarkBannerCtaSectionProps,
+} from "@/components/sections/dark-banner-cta-section";
+export {
   CloudPartnerSection,
   type CloudPartnerSectionProps,
 } from "@/components/sections/cloud-partner-section";

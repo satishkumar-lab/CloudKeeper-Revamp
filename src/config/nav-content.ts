@@ -1,4 +1,5 @@
 import type { NavMenuId } from "@/config/nav-menus";
+import { routes } from "@/config/routes";
 
 export type NavLinkItem = {
   label: string;
@@ -8,7 +9,7 @@ export type NavLinkItem = {
 };
 
 export const navLinks: NavLinkItem[] = [
-  { label: "Why Us?", href: "/#why-us", hasDropdown: false },
+  { label: "Why Us?", href: routes.whyUs, hasDropdown: false },
   {
     label: "Solutions",
     href: "/#solutions",

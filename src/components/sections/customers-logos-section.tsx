@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 
+import { CtaButton } from "@/components/home/primary-button";
 import {
-  customersLogosAssets,
   defaultCustomersLogosContent,
   type CustomerLogo,
   type CustomersLogosContent,
@@ -13,14 +12,20 @@ import { cn } from "@/lib/utils";
 
 const easeSmooth = [0.16, 1, 0.3, 1] as const;
 
+/** Nav "Success Stories" destination — no dedicated case-studies route yet. */
+const SUCCESS_STORIES_HREF = "/#testimonials";
+
 export type CustomersLogosSectionProps = {
   heading?: string;
   rows?: CustomersLogosContent["rows"];
-  backgroundSrc?: string;
   className?: string;
   id?: string;
   /** Caps logo render height — smaller reads more polished in dense grids */
   logoMaxHeight?: number;
+  /** When false, hides the success-stories CTA under the logo grid. Default true. */
+  showCta?: boolean;
+  ctaHref?: string;
+  ctaLabel?: string;
 };
 
 function LogoCell({
@@ -70,10 +75,12 @@ function LogoCell({
 export function CustomersLogosSection({
   heading = defaultCustomersLogosContent.heading,
   rows = defaultCustomersLogosContent.rows,
-  backgroundSrc = customersLogosAssets.bg,
   className,
   id = "customers-logos",
   logoMaxHeight = 48,
+  showCta = true,
+  ctaHref = SUCCESS_STORIES_HREF,
+  ctaLabel = "See all success stories",
 }: CustomersLogosSectionProps = {}) {
   const reduceMotion = useReducedMotion() === true;
   const headingId = `${id}-heading`;
@@ -81,20 +88,12 @@ export function CustomersLogosSection({
   return (
     <section
       id={id}
-      className={cn("relative w-full overflow-hidden font-sans", className)}
+      className={cn(
+        "relative w-full overflow-hidden bg-white font-sans",
+        className,
+      )}
       aria-labelledby={headingId}
     >
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <Image
-          src={backgroundSrc}
-          alt=""
-          fill
-          className="object-cover object-center"
-          sizes="100vw"
-          priority={false}
-        />
-      </div>
-
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-center gap-[40px] px-5 py-[50px] sm:px-8 lg:px-0">
         <motion.h2
           id={headingId}
@@ -125,6 +124,18 @@ export function CustomersLogosSection({
             </ul>
           ))}
         </div>
+
+        {showCta ? (
+          <motion.div
+            className="flex w-full justify-center pt-2"
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.7, ease: easeSmooth, delay: 0.1 }}
+          >
+            <CtaButton href={ctaHref}>{ctaLabel}</CtaButton>
+          </motion.div>
+        ) : null}
       </div>
     </section>
   );

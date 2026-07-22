@@ -1,6 +1,7 @@
 /** Canonical marketing routes used across nav, footer, and page CTAs */
 export const routes = {
   home: "/",
+  whyUs: "/why-us",
   solutions: {
     az: "/solutions/cloudkeeper-az",
     ppaPlus: "/solutions/cloudkeeper-ppa-plus",

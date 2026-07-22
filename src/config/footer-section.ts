@@ -144,7 +144,7 @@ export const footerByServices: FooterGroup = {
 export const footerCompany: FooterGroup = {
   title: "Company",
   links: [
-    { label: "Why CloudKeeper?", href: "#" },
+    { label: "Why CloudKeeper?", href: routes.whyUs },
     { label: "About Us", href: "#" },
     { label: "Our Team", href: "#" },
     { label: "Careers", href: "#" },
