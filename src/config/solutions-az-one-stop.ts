@@ -31,6 +31,7 @@ export const azOneStopContent = {
   intro: {
     headingBefore: "Enjoy savings, visibility, and expert support - ",
     headingHighlight: "all in one place!",
+    headingAfter: "",
     body: "In addition to ensuring savings, we provide comprehensive cloud cost visibility and proactive support acting as a cloud cost management vertical for your business.",
   },
   cards: [
@@ -66,3 +67,85 @@ export const azOneStopContent = {
     href: "/#contact",
   },
 } as const;
+
+export type OneStopSectionContent = {
+  darkBanner: {
+    titleBefore: string;
+    titleHighlight: string;
+    titleAfter: string;
+    bodyBefore: string;
+    bodyBold: string;
+  };
+  intro: {
+    headingBefore: string;
+    headingHighlight: string;
+    headingAfter?: string;
+    body: string;
+  };
+  cards: readonly {
+    id: string;
+    title: string;
+    bullets: readonly string[];
+    linkLabel: string;
+    href: string;
+  }[];
+  offer: {
+    before: string;
+    highlight: string;
+  };
+  cta: {
+    label: string;
+    href: string;
+  };
+};
+
+/** Figma 8200:166764 — PPA+ go-beyond / savings-visibility (same UI as AZ) */
+export const ppaPlusOneStopContent: OneStopSectionContent = {
+  darkBanner: {
+    titleBefore: "Your ",
+    titleHighlight: "one-stop solution",
+    titleAfter: " addressing the A to Z of cloud cost optimization",
+    bodyBefore:
+      "A comprehensive solution helping your business with everything needed to optimize the cloud costs effectively right from significant cloud cost savings & visibility to unlimited cloud support & cloud cost optimization services, ",
+    bodyBold: "all at no commitment or cost.",
+  },
+  intro: {
+    headingBefore: "",
+    headingHighlight: "Go beyond discounts: ",
+    headingAfter: "Optimize your cloud infrastructure for efficiency!",
+    body: "Get complete cloud cost visibility with CloudKeeper Lens and proactive cloud support for efficient cloud operations—all included with CloudKeeper EDP+ at no additional charge.",
+  },
+  cards: [
+    {
+      id: "cloud-cost-visibility",
+      title: "Cloud Cost Visibility",
+      bullets: [
+        "End-to-end cloud management for guaranteed results",
+        "Savings, Visibility, Optimization & Governance – all in one.",
+        "Gen-AI Powered FinOps for smarter, faster decisions.",
+      ],
+      linkLabel: "View Details",
+      href: "#",
+    },
+    {
+      id: "cloud-support",
+      title: "Unlimited Cloud Support",
+      bullets: [
+        "Cloud cost optimization consulting by a designated solution architect.",
+        "Customized Well-Architected Reviews by certified experts.",
+        "Ensure ongoing cost-efficient cloud operations.",
+      ],
+      linkLabel: "View Details",
+      href: "#",
+    },
+  ],
+  offer: {
+    before: "Experience these unmatched offerings at",
+    highlight: "No Commitment!",
+  },
+  cta: {
+    label: "Supercharge your AWS EDP",
+    href: "/#contact",
+  },
+};
+
