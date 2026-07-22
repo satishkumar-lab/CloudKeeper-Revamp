@@ -11,6 +11,12 @@ import {
   industryRecognitionItems,
   type IndustryRecognitionItem,
 } from "@/config/industry-recognition-section";
+import { cn } from "@/lib/utils";
+
+export type IndustryRecognitionSectionProps = {
+  heading?: string;
+  className?: string;
+};
 
 /** Figma 2439:18118 — logo slot */
 const LOGO_SLOT =
@@ -207,13 +213,14 @@ function RecognitionGrid({
 }
 
 /** Figma 8309:9151 — Recognized by the best (1440×603) */
-export function IndustryRecognitionSection() {
-  const { heading } = industryRecognitionContent;
-
+export function IndustryRecognitionSection({
+  heading = industryRecognitionContent.heading,
+  className,
+}: IndustryRecognitionSectionProps = {}) {
   return (
     <section
       id="recognition"
-      className="relative overflow-hidden font-sans lg:h-[565px]"
+      className={cn("relative overflow-hidden font-sans lg:h-[565px]", className)}
       style={{ background: INDUSTRY_RECOGNITION_BG }}
       aria-labelledby="industry-recognition-heading"
     >

@@ -8,19 +8,29 @@ export type NavLinkItem = {
 };
 
 export const navLinks: NavLinkItem[] = [
-  { label: "Why Us?", href: "#why-us", hasDropdown: false },
-  { label: "Solutions", href: "#solutions", hasDropdown: true, menuId: "solutions" },
-  { label: "Platforms", href: "#platforms", hasDropdown: true, menuId: "platforms" },
+  { label: "Why Us?", href: "/#why-us", hasDropdown: false },
+  {
+    label: "Solutions",
+    href: "/#solutions",
+    hasDropdown: true,
+    menuId: "solutions",
+  },
+  {
+    label: "Platforms",
+    href: "/#platforms",
+    hasDropdown: true,
+    menuId: "platforms",
+  },
   {
     label: "Capabilities",
-    href: "#capabilities",
+    href: "/#capabilities",
     hasDropdown: true,
     menuId: "capabilities",
   },
-  { label: "Insights", href: "#insights", hasDropdown: true, menuId: "insights" },
-  { label: "Success Stories", href: "#testimonials", hasDropdown: false },
-  { label: "Pricing", href: "#pricing", hasDropdown: false },
-  { label: "Company", href: "#company", hasDropdown: true, menuId: "company" },
+  { label: "Insights", href: "/#insights", hasDropdown: true, menuId: "insights" },
+  { label: "Success Stories", href: "/#testimonials", hasDropdown: false },
+  { label: "Pricing", href: "/#pricing", hasDropdown: false },
+  { label: "Company", href: "/#company", hasDropdown: true, menuId: "company" },
 ];
 
 export const promoContent = {

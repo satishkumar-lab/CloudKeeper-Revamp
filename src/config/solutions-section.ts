@@ -1,3 +1,5 @@
+import { routes } from "@/config/routes";
+
 /** Figma 8271:7786 — Card animation: CloudCost */
 export const solutionsAssets = {
   azIcon1: "/assets/home/solutions/az-icon-1.svg",
@@ -20,7 +22,7 @@ export const solutionCards = [
     title: "CloudKeeper AZ",
     description:
       "Guaranteed discounts on the entire cloud bill with zero lock-ins or commitments.",
-    exploreHref: "#",
+    exploreHref: routes.solutions.az,
     icon: "az" as const,
   },
   {

@@ -191,7 +191,7 @@ function NavItem({
 function ContactButton({ className }: { className?: string }) {
   return (
     <Link
-      href="#contact"
+      href="/#contact"
       className={cn(
         "inline-flex h-[38px] items-center justify-center rounded-[22px] bg-[#17a5fb] px-5 text-sm font-medium tracking-[-0.02em] text-white transition-colors hover:bg-[#1298eb]",
         className,

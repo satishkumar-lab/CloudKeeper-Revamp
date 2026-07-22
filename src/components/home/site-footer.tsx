@@ -20,6 +20,11 @@ import {
   footerSocialLinks,
   type FooterGroup,
 } from "@/config/footer-section";
+import { cn } from "@/lib/utils";
+
+export type SiteFooterProps = {
+  className?: string;
+};
 
 const footerLinkClassName = "footer-nav-link inline-flex min-h-6 items-center text-sm font-medium leading-5 tracking-[-0.2px]";
 
@@ -246,11 +251,11 @@ function FooterNewsletter() {
 }
 
 /** Figma 8306:12854 — Footer desktop */
-export function SiteFooter() {
+export function SiteFooter({ className }: SiteFooterProps = {}) {
   const { copyright } = footerContent;
 
   return (
-    <footer className="site-footer bg-white font-sans">
+    <footer className={cn("site-footer bg-white font-sans", className)}>
       <div className="mx-auto w-full max-w-[1440px] border-t border-[#e5e5e5] px-6 pb-0 pt-[50px] lg:px-[60px]">
         <div className="flex flex-col gap-10">
           <div className="grid grid-cols-1 gap-x-5 gap-y-[30px] sm:grid-cols-2 lg:grid-cols-4">

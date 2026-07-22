@@ -1,4 +1,5 @@
 import { homeAssets } from "@/config/home-assets";
+import { routes } from "@/config/routes";
 
 export const navLinks = [
   { label: "Why Us?", href: "#why-us", hasDropdown: false },
@@ -157,7 +158,7 @@ export const uniqueCards = [
     title: "CloudKeeper AZ",
     description:
       "Guaranteed discounts on the entire cloud bill with zero lock-ins or commitments.",
-    exploreHref: "#",
+    exploreHref: routes.solutions.az,
   },
   {
     title: "CloudKeeper EDP+",

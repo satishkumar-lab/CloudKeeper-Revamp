@@ -22,6 +22,15 @@ import {
 } from "@/config/thought-leadership-section";
 import { cn } from "@/lib/utils";
 
+export type ThoughtLeadershipSectionProps = {
+  heading?: string;
+  subtitle?: string;
+  viewAllHref?: string;
+  showNewsletter?: boolean;
+  className?: string;
+  id?: string;
+};
+
 function BlogTagIcon() {
   const parts = thoughtLeadershipAssets.iconBlogParts;
 
@@ -205,13 +214,18 @@ function NewsletterSubscribe() {
 }
 
 /** Figma 8251:20843 — card: thought leadership */
-export function ThoughtLeadershipSection() {
-  const { heading, subtitle, viewAllHref } = thoughtLeadershipContent;
-
+export function ThoughtLeadershipSection({
+  heading = thoughtLeadershipContent.heading,
+  subtitle = thoughtLeadershipContent.subtitle,
+  viewAllHref = thoughtLeadershipContent.viewAllHref,
+  showNewsletter = true,
+  className,
+  id = "insights",
+}: ThoughtLeadershipSectionProps = {}) {
   return (
     <section
-      id="insights"
-      className="relative isolate overflow-hidden bg-black font-sans"
+      id={id}
+      className={cn("relative isolate overflow-hidden bg-black font-sans", className)}
       style={{ background: THOUGHT_LEADERSHIP_BG }}
       aria-labelledby="thought-leadership-heading"
     >
@@ -265,9 +279,11 @@ export function ThoughtLeadershipSection() {
                 ))}
               </div>
             </ScrollRevealItem>
-            <ScrollRevealItem>
-              <NewsletterSubscribe />
-            </ScrollRevealItem>
+            {showNewsletter ? (
+              <ScrollRevealItem>
+                <NewsletterSubscribe />
+              </ScrollRevealItem>
+            ) : null}
           </ScrollRevealGroup>
         </ScrollRevealGroup>
       </div>

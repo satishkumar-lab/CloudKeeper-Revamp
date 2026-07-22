@@ -10,6 +10,12 @@ import {
   type TestimonialItem,
 } from "@/config/testimonials-section";
 import { SpanTextReveal } from "@/components/motion/span-text-reveal";
+import { cn } from "@/lib/utils";
+
+export type TestimonialsSectionProps = {
+  className?: string;
+  id?: string;
+};
 
 /** Equal vertical line length above/below carousel controls */
 const CAROUSEL_DIVIDER_LENGTH = 300;
@@ -193,7 +199,10 @@ function TestimonialPortrait({ item }: { item: TestimonialItem }) {
 }
 
 /** Figma 8301:8979 — Testimonials */
-export function TestimonialsSection() {
+export function TestimonialsSection({
+  className,
+  id = "testimonials",
+}: TestimonialsSectionProps = {}) {
   const [index, setIndex] = useState(0);
   const total = testimonialsContent.length;
   const item = testimonialsContent[index];
@@ -205,8 +214,8 @@ export function TestimonialsSection() {
 
   return (
     <section
-      id="testimonials"
-      className="relative overflow-hidden bg-white font-sans"
+      id={id}
+      className={cn("relative overflow-hidden bg-white font-sans", className)}
       aria-labelledby="testimonials-heading"
     >
       <h2 id="testimonials-heading" className="sr-only">

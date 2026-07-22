@@ -3,9 +3,23 @@
 import { CtaButton } from "@/components/home/primary-button";
 import { InteractiveGridSection } from "@/components/motion/interactive-grid-background";
 import { contactContent } from "@/config/contact-section";
+import { cn } from "@/lib/utils";
 
-export function ContactSectionInteractive() {
-  const { heading, ctaLabel, ctaHref } = contactContent;
+export type ContactSectionInteractiveProps = {
+  heading?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  className?: string;
+  id?: string;
+};
+
+export function ContactSectionInteractive({
+  heading = contactContent.heading,
+  ctaLabel = contactContent.ctaLabel,
+  ctaHref = contactContent.ctaHref,
+  className,
+  id = "contact",
+}: ContactSectionInteractiveProps = {}) {
 
   const outcomesStart = heading.indexOf("Start paying for outcomes.");
   const headingLead =
@@ -15,8 +29,11 @@ export function ContactSectionInteractive() {
 
   return (
     <InteractiveGridSection
-      id="contact"
-      className="border-t border-[#f0f0f0] px-6 py-16 font-sans lg:py-20"
+      id={id}
+      className={cn(
+        "border-t border-[#f0f0f0] px-6 py-16 font-sans lg:py-20",
+        className,
+      )}
       aria-labelledby="contact-heading"
     >
       <div className="relative mx-auto flex min-h-[240px] w-full max-w-[1260px] flex-col items-center justify-center gap-10 lg:gap-11">

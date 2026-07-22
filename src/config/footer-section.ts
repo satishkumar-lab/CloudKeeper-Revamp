@@ -1,3 +1,5 @@
+import { routes } from "@/config/routes";
+
 /** Figma 8306:12854 — Footer desktop */
 export const FOOTER_NEWSLETTER_BG =
   "linear-gradient(90deg, #e2f0ff 0%, #ffe9f5 100%)";
@@ -56,7 +58,7 @@ export const footerCol1Top: readonly FooterGroup[] = [
   {
     title: "Solutions",
     links: [
-      { label: "CloudKeeper AZ", href: "#" },
+      { label: "CloudKeeper AZ", href: routes.solutions.az },
       { label: "CloudKeeper PPA+", href: "#" },
     ],
   },

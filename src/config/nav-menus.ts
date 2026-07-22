@@ -47,6 +47,7 @@ export type NavMenuId =
   | "company";
 
 import { navDropdownAssets } from "@/config/nav-assets";
+import { routes } from "@/config/routes";
 
 const LOREM = "Lörem ipsum maudeffekten aplan ut.";
 const A = navDropdownAssets;
@@ -62,7 +63,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
         items: [
           {
             label: "CloudKeeper AZ",
-            href: "#",
+            href: routes.solutions.az,
             description: LOREM,
             icon: "/assets/home/nav/dropdown/icon-az.svg",
           },

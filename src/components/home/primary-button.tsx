@@ -10,6 +10,8 @@ export type CtaButtonProps = {
   className?: string;
   /** Fixed height; width follows label length */
   size?: "md" | "sm";
+  /** solid = filled blue; outlineDark = blue border on dark backgrounds */
+  variant?: "solid" | "outlineDark";
   showArrow?: boolean;
   fullWidth?: boolean;
   onClick?: () => void;
@@ -41,11 +43,19 @@ const sizeStyles = {
   sm: "h-[38px] px-5 text-sm rounded-full",
 } as const;
 
+const variantStyles = {
+  solid:
+    "border-0 bg-[#17a5fb] text-white hover:bg-[#0e95ea] focus-visible:ring-[#17a5fb]/40 focus-visible:ring-offset-2",
+  outlineDark:
+    "border border-[#17a5fb] bg-transparent text-white hover:bg-[#17a5fb]/10 focus-visible:ring-[#17a5fb]/35 focus-visible:ring-offset-0",
+} as const;
+
 export function CtaButton({
   children,
   href = "#contact",
   className,
   size = "md",
+  variant = "solid",
   showArrow = true,
   fullWidth = false,
   onClick,
@@ -54,11 +64,11 @@ export function CtaButton({
 }: CtaButtonProps) {
   const classes = cn(
     "group/cta inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-[9.484px]",
-    "border-0 font-sans text-white shadow-none outline-none",
-    "bg-[#17a5fb] transition-colors duration-200 hover:bg-[#0e95ea]",
-    "focus-visible:ring-2 focus-visible:ring-[#17a5fb]/40 focus-visible:ring-offset-2",
+    "font-sans shadow-none outline-none transition-colors duration-200",
+    "focus-visible:ring-2",
     "disabled:pointer-events-none disabled:opacity-50",
     sizeStyles[size],
+    variantStyles[variant],
     fullWidth && "w-full",
     className,
   );
