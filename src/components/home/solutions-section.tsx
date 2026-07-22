@@ -1,6 +1,8 @@
 "use client";
 
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import Link from "next/link";
+import { useState } from "react";
 
 import {
   ScrollRevealGroup,
@@ -11,6 +13,49 @@ import {
   solutionCards,
   solutionsAssets,
 } from "@/config/solutions-section";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+
+const HEADLINE = "Cloud Cost Optimisation Solutions Built for Scale";
+const HEADLINE_WORDS = HEADLINE.split(" ");
+
+const revealEase = [0.22, 1, 0.36, 1] as const;
+
+const headlineContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.04,
+    },
+  },
+};
+
+const headlineWord: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: revealEase },
+  },
+};
+
+const cardEnterLeft: Variants = {
+  hidden: { opacity: 0, x: -56 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: revealEase },
+  },
+};
+
+const cardEnterRight: Variants = {
+  hidden: { opacity: 0, x: 56 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: revealEase },
+  },
+};
 
 function AzIcon() {
   return (
@@ -102,9 +147,26 @@ function SolutionCard({
   description,
   exploreHref,
   icon,
-}: (typeof solutionCards)[number]) {
+  from,
+}: (typeof solutionCards)[number] & { from: "left" | "right" }) {
+  const prefersReducedMotion = useReducedMotion();
+  const enterVariants = from === "left" ? cardEnterLeft : cardEnterRight;
+
   return (
-    <article className="group/card flex flex-col gap-[30px] rounded-[22px] border border-transparent bg-white px-[50px] pb-[50px] pt-[50px] shadow-[0px_8px_24px_0px_rgba(29,140,242,0.16)] transition-[border-color,box-shadow] duration-300 ease-out hover:border-[#17a5fb] hover:shadow-none">
+    <motion.article
+      variants={
+        prefersReducedMotion ? { hidden: {}, visible: {} } : enterVariants
+      }
+      whileHover={
+        prefersReducedMotion
+          ? undefined
+          : {
+              y: -6,
+              transition: { duration: 0.35, ease: revealEase },
+            }
+      }
+      className="group/card flex flex-col gap-[30px] rounded-[22px] border border-transparent bg-white px-[50px] pb-[50px] pt-[50px] shadow-[0px_8px_24px_0px_rgba(29,140,242,0.16)] transition-[border-color,box-shadow] duration-300 ease-out will-change-transform hover:border-[#17a5fb] hover:shadow-[0px_16px_40px_0px_rgba(29,140,242,0.12)]"
+    >
       <div className="flex flex-col gap-[60px]">
         <div className="flex flex-col gap-[50px]">
           {icon === "az" ? <AzIcon /> : <PpaIcon />}
@@ -117,7 +179,91 @@ function SolutionCard({
           <ExploreLink href={exploreHref} />
         </div>
       </div>
-    </article>
+    </motion.article>
+  );
+}
+
+function SolutionsHeading() {
+  const [target, setTarget] = useState<HTMLHeadingElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const isVisible = useScrollReveal(target, {
+    disabled: prefersReducedMotion === true,
+    threshold: 0.35,
+  });
+
+  const animate =
+    prefersReducedMotion === true || isVisible ? "visible" : "hidden";
+
+  return (
+    <motion.h2
+      ref={setTarget}
+      id="solutions-heading"
+      className="text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.3] tracking-[-0.5px] text-black lg:text-[40px]"
+      initial="hidden"
+      animate={animate}
+      variants={
+        prefersReducedMotion === true
+          ? { hidden: {}, visible: {} }
+          : headlineContainer
+      }
+      aria-label={HEADLINE}
+    >
+      {HEADLINE_WORDS.map((word, index) => (
+        <motion.span
+          key={`${word}-${index}`}
+          className="mr-[0.28em] inline-block last:mr-0"
+          variants={
+            prefersReducedMotion === true
+              ? { hidden: {}, visible: {} }
+              : headlineWord
+          }
+        >
+          {word}
+        </motion.span>
+      ))}
+    </motion.h2>
+  );
+}
+
+function SolutionsCards() {
+  const [target, setTarget] = useState<HTMLDivElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const isVisible = useScrollReveal(target, {
+    disabled: prefersReducedMotion === true,
+    threshold: 0.12,
+  });
+
+  const animate =
+    prefersReducedMotion === true || isVisible ? "visible" : "hidden";
+
+  return (
+    <motion.div
+      ref={setTarget}
+      className="mt-10 grid gap-7 lg:grid-cols-2"
+      initial="hidden"
+      animate={animate}
+      variants={
+        prefersReducedMotion === true
+          ? { hidden: {}, visible: {} }
+          : {
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.06,
+                  delayChildren: 0.05,
+                },
+              },
+            }
+      }
+    >
+      {solutionCards.map((card, index) => (
+        <SolutionCard
+          key={card.id}
+          {...card}
+          from={index % 2 === 0 ? "left" : "right"}
+        />
+      ))}
+    </motion.div>
   );
 }
 
@@ -202,26 +348,16 @@ export function SolutionsSection() {
       aria-labelledby="solutions-heading"
     >
       <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-16 sm:px-8 lg:px-[110px] lg:pb-[62px] lg:pt-20">
-        <ScrollRevealGroup className="mx-auto max-w-[1220px]">
-          <ScrollRevealItem>
-            <h2
-              id="solutions-heading"
-              className="text-center text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.3] tracking-[-0.5px] text-black lg:text-[40px]"
-            >
-              Cloud Cost Optimisation Solutions Built for Scale
-            </h2>
-          </ScrollRevealItem>
+        <div className="mx-auto max-w-[1220px]">
+          <SolutionsHeading />
+          <SolutionsCards />
 
-          <ScrollRevealItem className="mt-10 grid gap-7 lg:grid-cols-2">
-            {solutionCards.map((card) => (
-              <SolutionCard key={card.id} {...card} />
-            ))}
-          </ScrollRevealItem>
-
-          <ScrollRevealItem className="mt-10">
-            <AddonsBar />
-          </ScrollRevealItem>
-        </ScrollRevealGroup>
+          <ScrollRevealGroup className="mt-10" threshold={0.15}>
+            <ScrollRevealItem>
+              <AddonsBar />
+            </ScrollRevealItem>
+          </ScrollRevealGroup>
+        </div>
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -10,6 +11,7 @@ import {
   type TestimonialItem,
 } from "@/config/testimonials-section";
 import { SpanTextReveal } from "@/components/motion/span-text-reveal";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 
 export type TestimonialsSectionProps = {
@@ -19,6 +21,25 @@ export type TestimonialsSectionProps = {
 
 /** Equal vertical line length above/below carousel controls */
 const CAROUSEL_DIVIDER_LENGTH = 300;
+
+const revealEase = [0.22, 1, 0.36, 1] as const;
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? 28 : -28,
+  }),
+  center: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.45, ease: revealEase },
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? -28 : 28,
+    transition: { duration: 0.35, ease: revealEase },
+  }),
+};
 
 function CarouselChevron({ direction }: { direction: "prev" | "next" }) {
   return (
@@ -136,6 +157,8 @@ function AuthorBlock({ name, role }: { name: string; role: string }) {
 
 /** Figma 8301:9020 — rotated portrait frame */
 function TestimonialPortrait({ item }: { item: TestimonialItem }) {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <div className="relative size-[364px] shrink-0 overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
@@ -167,19 +190,28 @@ function TestimonialPortrait({ item }: { item: TestimonialItem }) {
       />
 
       {item.videoHref ? (
-        <Link
-          href={item.videoHref}
-          className="absolute bottom-[60px] right-[51px] flex size-[62px] items-center justify-center rounded-[33px] bg-gradient-to-r from-[#3c7abd] to-[#ed0082] shadow-[inset_0px_2.385px_4.77px_rgba(0,0,0,0.05)]"
-          aria-label={`Play ${item.name} video`}
+        <motion.div
+          className="absolute bottom-[60px] right-[51px]"
+          whileHover={
+            prefersReducedMotion ? undefined : { scale: 1.06 }
+          }
+          whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+          transition={{ duration: 0.25, ease: revealEase }}
         >
-          <img
-            src={testimonialsAssets.playIcon}
-            alt=""
-            className="size-[24px]"
-            decoding="async"
-            aria-hidden
-          />
-        </Link>
+          <Link
+            href={item.videoHref}
+            className="flex size-[62px] items-center justify-center rounded-[33px] bg-gradient-to-r from-[#3c7abd] to-[#ed0082] shadow-[inset_0px_2.385px_4.77px_rgba(0,0,0,0.05)]"
+            aria-label={`Play ${item.name} video`}
+          >
+            <img
+              src={testimonialsAssets.playIcon}
+              alt=""
+              className="size-[24px]"
+              decoding="async"
+              aria-hidden
+            />
+          </Link>
+        </motion.div>
       ) : null}
 
       <div className="absolute bottom-[36px] right-[-12px] flex items-end gap-1">
@@ -198,22 +230,108 @@ function TestimonialPortrait({ item }: { item: TestimonialItem }) {
   );
 }
 
+function TestimonialCopy({
+  item,
+  direction,
+  quoteClassName,
+}: {
+  item: TestimonialItem;
+  direction: number;
+  quoteClassName: string;
+}) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return (
+      <div className="flex w-full flex-col gap-5">
+        <CompanyLogo item={item} />
+        <blockquote className={quoteClassName}>&ldquo;{item.quote}&rdquo;</blockquote>
+        <AuthorBlock name={item.name} role={item.role} />
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence mode="wait" custom={direction}>
+      <motion.div
+        key={item.id}
+        custom={direction}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        className="flex w-full flex-col gap-5"
+      >
+        <CompanyLogo item={item} />
+        <blockquote className={quoteClassName}>&ldquo;{item.quote}&rdquo;</blockquote>
+        <AuthorBlock name={item.name} role={item.role} />
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function TestimonialPortraitSlide({
+  item,
+  direction,
+}: {
+  item: TestimonialItem;
+  direction: number;
+}) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <TestimonialPortrait item={item} />;
+  }
+
+  return (
+    <AnimatePresence mode="wait" custom={direction}>
+      <motion.div
+        key={item.id}
+        custom={direction}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+      >
+        <TestimonialPortrait item={item} />
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 /** Figma 8301:8979 — Testimonials */
 export function TestimonialsSection({
   className,
   id = "testimonials",
 }: TestimonialsSectionProps = {}) {
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [sectionEl, setSectionEl] = useState<HTMLElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const inView = useScrollReveal(sectionEl, {
+    disabled: prefersReducedMotion === true,
+    threshold: 0.18,
+  });
+
   const total = testimonialsContent.length;
   const item = testimonialsContent[index];
 
   if (!item) return null;
 
-  const goPrev = () => setIndex((i) => (i === 0 ? total - 1 : i - 1));
-  const goNext = () => setIndex((i) => (i === total - 1 ? 0 : i + 1));
+  const goPrev = () => {
+    setDirection(-1);
+    setIndex((i) => (i === 0 ? total - 1 : i - 1));
+  };
+  const goNext = () => {
+    setDirection(1);
+    setIndex((i) => (i === total - 1 ? 0 : i + 1));
+  };
+
+  const sectionVisible = prefersReducedMotion === true || inView;
 
   return (
     <section
+      ref={setSectionEl}
       id={id}
       className={cn("relative overflow-hidden bg-white font-sans", className)}
       aria-labelledby="testimonials-heading"
@@ -223,12 +341,21 @@ export function TestimonialsSection({
       </h2>
 
       {/* Quote mark — 8301:9037 */}
-      <img
+      <motion.img
         src={testimonialsAssets.quoteMark}
         alt=""
         className="pointer-events-none absolute left-[58px] top-[27px] hidden h-[72px] w-[86px] lg:block"
         decoding="async"
         aria-hidden
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+        animate={
+          sectionVisible
+            ? { opacity: 1, y: 0 }
+            : prefersReducedMotion
+              ? undefined
+              : { opacity: 0, y: 12 }
+        }
+        transition={{ duration: 0.6, ease: revealEase, delay: 0.05 }}
       />
 
       {/* Decorative bubble — 8301:9038 */}
@@ -244,16 +371,38 @@ export function TestimonialsSection({
         {/* Desktop — Figma absolute layout */}
         <div className="relative hidden min-h-[763px] lg:block">
           {/* Quote — 8301:8984 */}
-          <div className="absolute left-[115px] top-[152px] flex w-[524px] flex-col gap-5">
-            <CompanyLogo item={item} />
-            <blockquote className="text-[28px] leading-[1.7] text-black">
-              &ldquo;{item.quote}&rdquo;
-            </blockquote>
-            <AuthorBlock name={item.name} role={item.role} />
-          </div>
+          <motion.div
+            className="absolute left-[115px] top-[152px] flex w-[524px] flex-col"
+            initial={prefersReducedMotion ? false : { opacity: 0, x: -36 }}
+            animate={
+              sectionVisible
+                ? { opacity: 1, x: 0 }
+                : prefersReducedMotion
+                  ? undefined
+                  : { opacity: 0, x: -36 }
+            }
+            transition={{ duration: 0.7, ease: revealEase }}
+          >
+            <TestimonialCopy
+              item={item}
+              direction={direction}
+              quoteClassName="text-[28px] leading-[1.7] text-black"
+            />
+          </motion.div>
 
           {/* Center carousel — equal dividers + balanced arrows */}
-          <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
+          <motion.div
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.92 }}
+            animate={
+              sectionVisible
+                ? { opacity: 1, scale: 1 }
+                : prefersReducedMotion
+                  ? undefined
+                  : { opacity: 0, scale: 0.92 }
+            }
+            transition={{ duration: 0.55, ease: revealEase, delay: 0.12 }}
+          >
             <CarouselVerticalDivider />
             <div className="relative z-10 flex flex-col gap-5 bg-white py-1">
               <CarouselArrow
@@ -268,12 +417,23 @@ export function TestimonialsSection({
               />
             </div>
             <CarouselVerticalDivider />
-          </div>
+          </motion.div>
 
           {/* Portrait — 8301:9009 */}
-          <div className="absolute left-[890px] top-[189px]">
-            <TestimonialPortrait item={item} />
-          </div>
+          <motion.div
+            className="absolute left-[890px] top-[189px]"
+            initial={prefersReducedMotion ? false : { opacity: 0, x: 36 }}
+            animate={
+              sectionVisible
+                ? { opacity: 1, x: 0 }
+                : prefersReducedMotion
+                  ? undefined
+                  : { opacity: 0, x: 36 }
+            }
+            transition={{ duration: 0.7, ease: revealEase, delay: 0.08 }}
+          >
+            <TestimonialPortraitSlide item={item} direction={direction} />
+          </motion.div>
         </div>
 
         {/* Mobile / tablet stack */}
@@ -285,14 +445,14 @@ export function TestimonialsSection({
             decoding="async"
             aria-hidden
           />
-          <div className="flex w-full max-w-[524px] flex-col gap-5">
-            <CompanyLogo item={item} />
-            <blockquote className="text-xl leading-[1.7] text-black sm:text-2xl">
-              &ldquo;{item.quote}&rdquo;
-            </blockquote>
-            <AuthorBlock name={item.name} role={item.role} />
+          <div className="w-full max-w-[524px]">
+            <TestimonialCopy
+              item={item}
+              direction={direction}
+              quoteClassName="text-xl leading-[1.7] text-black sm:text-2xl"
+            />
           </div>
-          <TestimonialPortrait item={item} />
+          <TestimonialPortraitSlide item={item} direction={direction} />
           <div className="flex gap-5">
             <CarouselArrow
               direction="prev"

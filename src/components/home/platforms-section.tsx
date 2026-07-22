@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { CtaButton } from "@/components/home/primary-button";
 import {
@@ -19,6 +19,9 @@ import { cn } from "@/lib/utils";
 
 const TAB_GRADIENT =
   "linear-gradient(90deg, rgb(23, 165, 251) 0%, rgb(154, 75, 255) 50%, rgb(237, 0, 130) 100%)";
+
+/** How long each tab stays before auto-advancing */
+const TAB_AUTO_DURATION_MS = 12000;
 
 function PlatformTabIcon({ tabId, icon }: { tabId: PlatformTabId; icon: string }) {
   const layout = platformTabIconLayout[tabId];
@@ -55,41 +58,60 @@ function PlatformTabButton({
   label,
   icon,
   active,
+  progress,
+  autoPlay,
   onClick,
 }: {
   tabId: PlatformTabId;
   label: string;
   icon: string;
   active: boolean;
+  /** 0–1 fill amount for the active tab progress line */
+  progress: number;
+  autoPlay: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="relative flex w-full max-w-[316px] flex-1 flex-col gap-2.5 bg-white p-5 text-left sm:flex-none"
+      className="relative flex w-full min-w-0 flex-1 basis-0 flex-col items-stretch gap-2.5 bg-white p-5 text-left"
       aria-selected={active}
       role="tab"
     >
-      <span className="flex items-center gap-[13px]">
-        <PlatformTabIcon tabId={tabId} icon={icon} />
+      <span className="flex w-full flex-col gap-2.5">
+        <span className="flex items-center gap-[13px]">
+          <PlatformTabIcon tabId={tabId} icon={icon} />
+          <span
+            className={cn(
+              "text-xl font-medium leading-normal tracking-[-0.4px] transition-colors duration-300",
+              active ? "text-[#253746]" : "text-[#b3b3b3]",
+            )}
+          >
+            {label}
+          </span>
+        </span>
+
+        {/* Progress line — full equal tab width */}
         <span
           className={cn(
-            "text-xl font-medium leading-normal tracking-[-0.4px]",
-            active ? "text-[#253746]" : "text-[#b3b3b3]",
+            "relative h-1 w-full overflow-hidden rounded-full",
+            active ? "bg-[#eef2f6]" : "bg-transparent",
           )}
+          aria-hidden
         >
-          {label}
+          {active ? (
+            <span
+              className="absolute inset-y-0 left-0 h-full origin-left rounded-full"
+              style={{
+                width: "100%",
+                background: TAB_GRADIENT,
+                transform: `scaleX(${autoPlay ? progress : 1})`,
+              }}
+            />
+          ) : null}
         </span>
       </span>
-      <span
-        className="absolute bottom-0 left-1/2 h-1 -translate-x-1/2 rounded-full"
-        style={{
-          width: active ? "100%" : "2px",
-          background: active ? TAB_GRADIENT : "transparent",
-        }}
-        aria-hidden
-      />
     </button>
   );
 }
@@ -261,17 +283,101 @@ function ValueAddonsBar() {
 export function PlatformsSection() {
   const [activeTabId, setActiveTabId] = useState<PlatformTabId>("lens");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(true);
+  const [sectionInView, setSectionInView] = useState(false);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const progressRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
+  const lastTsRef = useRef<number | null>(null);
 
   const activeTab =
     platformTabsContent.find((tab) => tab.id === activeTabId) ?? platformTabsContent[0];
 
-  const handleTabChange = (id: PlatformTabId) => {
+  const goToTab = useCallback((id: PlatformTabId) => {
     setActiveTabId(id);
     setActiveSlide(0);
-  };
+    progressRef.current = 0;
+    setProgress(0);
+    lastTsRef.current = null;
+  }, []);
+
+  const goToNextTab = useCallback(() => {
+    const currentIndex = platformTabsContent.findIndex((tab) => tab.id === activeTabId);
+    const nextIndex = (currentIndex + 1) % platformTabsContent.length;
+    goToTab(platformTabsContent[nextIndex].id);
+  }, [activeTabId, goToTab]);
+
+  // Respect reduced motion
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setAutoPlay(!mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  // Only auto-advance while section is visible
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setSectionInView(entry.isIntersecting),
+      { threshold: 0.25 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Smooth progress fill → next tab
+  useEffect(() => {
+    if (!autoPlay || !sectionInView) {
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      lastTsRef.current = null;
+      return;
+    }
+
+    const tick = (ts: number) => {
+      if (lastTsRef.current == null) lastTsRef.current = ts;
+
+      if (!isPaused) {
+        const delta = ts - lastTsRef.current;
+        lastTsRef.current = ts;
+        const next = Math.min(1, progressRef.current + delta / TAB_AUTO_DURATION_MS);
+        progressRef.current = next;
+        setProgress(next);
+
+        if (next >= 1) {
+          goToNextTab();
+          return;
+        }
+      } else {
+        lastTsRef.current = ts;
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      lastTsRef.current = null;
+    };
+  }, [activeTabId, autoPlay, goToNextTab, isPaused, sectionInView]);
 
   return (
     <section
+      ref={sectionRef}
       id="platforms"
       className="bg-white font-sans"
       aria-labelledby="platforms-heading"
@@ -292,36 +398,48 @@ export function PlatformsSection() {
           </ScrollRevealItem>
 
           <ScrollRevealItem className="flex w-full flex-col gap-10 rounded-xl">
-            {/* Tab bar — Figma 2987:24276 */}
             <div
-              className="flex flex-col items-stretch justify-center sm:flex-row"
-              role="tablist"
-              aria-label="Platform products"
+              className="flex w-full flex-col gap-10"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onFocusCapture={() => setIsPaused(true)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setIsPaused(false);
+                }
+              }}
             >
-              {platformTabsContent.map((tab) => (
-                <PlatformTabButton
-                  key={tab.id}
-                  tabId={tab.id}
-                  label={tab.label}
-                  icon={tab.icon}
-                  active={tab.id === activeTabId}
-                  onClick={() => handleTabChange(tab.id)}
-                />
-              ))}
-            </div>
+              {/* Tab bar — Figma 2987:24276 */}
+              <div
+                className="flex w-full flex-col items-stretch justify-center sm:flex-row"
+                role="tablist"
+                aria-label="Platform products"
+              >
+                {platformTabsContent.map((tab) => (
+                  <PlatformTabButton
+                    key={tab.id}
+                    tabId={tab.id}
+                    label={tab.label}
+                    icon={tab.icon}
+                    active={tab.id === activeTabId}
+                    progress={progress}
+                    autoPlay={autoPlay}
+                    onClick={() => goToTab(tab.id)}
+                  />
+                ))}
+              </div>
 
-            {/* Content card row — Figma 8297:8720 */}
-            <div className="flex flex-col items-stretch lg:flex-row lg:items-center">
-              {/* Left panel — Figma 8297:8721 */}
-              <div className="flex h-[483px] w-full shrink-0 flex-col overflow-hidden rounded-2xl bg-[#f3f8ff] p-[30px] lg:w-[500px]">
-                <div className="w-full max-w-[382px]">
-                  <div className="flex flex-col gap-20">
+              {/* Content card row — Figma 8297:8720 */}
+              <div className="flex flex-col items-stretch lg:flex-row lg:items-center">
+                {/* Left panel — fixed width; headlines are always 3 lines */}
+                <div className="flex h-[483px] w-full shrink-0 flex-col overflow-hidden rounded-2xl bg-[#f3f8ff] p-[30px] lg:w-[520px]">
+                  <div className="flex w-full max-w-[440px] flex-col gap-20">
                     <div className="flex flex-col gap-5">
                       <div className="flex flex-col gap-5">
                         <p className="py-2 text-sm font-light uppercase leading-7 text-black">
                           {activeTab.category}
                         </p>
-                        <h3 className="max-w-[409px] pr-10 text-2xl leading-[39.2px] tracking-[-0.56px] text-black">
+                        <h3 className="whitespace-pre-line text-2xl leading-[39.2px] tracking-[-0.56px] text-black">
                           {activeTab.headline}
                         </h3>
                       </div>
@@ -332,15 +450,15 @@ export function PlatformsSection() {
                     <FeatureTags tags={activeTab.featureTags} />
                   </div>
                 </div>
-              </div>
 
-              <DashboardPreview
-                dashboard={activeTab.dashboard}
-                label={activeTab.label}
-                slides={activeTab.slides}
-                activeSlide={activeSlide}
-                onSelectSlide={setActiveSlide}
-              />
+                <DashboardPreview
+                  dashboard={activeTab.dashboard}
+                  label={activeTab.label}
+                  slides={activeTab.slides}
+                  activeSlide={activeSlide}
+                  onSelectSlide={setActiveSlide}
+                />
+              </div>
             </div>
           </ScrollRevealItem>
 

@@ -55,7 +55,7 @@ export const platformTabsContent: readonly PlatformTab[] = [
     icon: platformsAssets.tabLensIcon,
     category: "Visibility & Governance",
     headline:
-      "Complete visibility into your cloud spend with real-time dashboards and intelligent analytics.",
+      "Complete visibility into your cloud spend\nwith real-time dashboards and\nintelligent analytics.",
     exploreHref: "#",
     featureTags: [
       "Intelligent analytics",
@@ -71,7 +71,7 @@ export const platformTabsContent: readonly PlatformTab[] = [
     icon: platformsAssets.tabTunerIcon,
     category: "Usage Optimization",
     headline:
-      "Optimize cloud usage and eliminate waste with intelligent, automated recommendations.",
+      "Optimize cloud usage and eliminate waste\nwith intelligent, automated\nrecommendations.",
     exploreHref: "#",
     featureTags: [
       "Usage optimization",
@@ -87,7 +87,7 @@ export const platformTabsContent: readonly PlatformTab[] = [
     icon: platformsAssets.tabCommitIcon,
     category: "Rate Optimization",
     headline:
-      "Maximize savings from Reserved Instances, Savings Plans, and commitment strategies.",
+      "Maximize savings from Reserved Instances,\nSavings Plans, and commitment\nstrategies.",
     exploreHref: "#",
     featureTags: [
       "Commitment management",
@@ -103,7 +103,7 @@ export const platformTabsContent: readonly PlatformTab[] = [
     icon: platformsAssets.tabLensgptIcon,
     category: "Agentic AI FinOps",
     headline:
-      "Agentic AI platform for autonomous cloud cost optimization and intelligent FinOps workflows.",
+      "Agentic AI platform for autonomous\ncloud cost optimization and intelligent\nFinOps workflows.",
     exploreHref: "#",
     featureTags: [
       "Agentic AI",
