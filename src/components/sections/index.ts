@@ -18,6 +18,10 @@ export {
   type CustomersLogosSectionProps,
 } from "@/components/sections/customers-logos-section";
 export {
+  LightBannerCtaSection,
+  type LightBannerCtaSectionProps,
+} from "@/components/sections/light-banner-cta-section";
+export {
   CloudPartnerSection,
   type CloudPartnerSectionProps,
 } from "@/components/sections/cloud-partner-section";

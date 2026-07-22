@@ -69,7 +69,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
           },
           {
             label: "CloudKeeper PPA+",
-            href: "#",
+            href: routes.solutions.ppaPlus,
             description: LOREM,
             icon: "/assets/home/nav/dropdown/icon-ppa.svg",
           },

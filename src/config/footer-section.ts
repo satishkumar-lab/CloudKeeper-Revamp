@@ -59,7 +59,7 @@ export const footerCol1Top: readonly FooterGroup[] = [
     title: "Solutions",
     links: [
       { label: "CloudKeeper AZ", href: routes.solutions.az },
-      { label: "CloudKeeper PPA+", href: "#" },
+      { label: "CloudKeeper PPA+", href: routes.solutions.ppaPlus },
     ],
   },
   {

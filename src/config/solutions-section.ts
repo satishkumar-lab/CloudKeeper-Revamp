@@ -29,7 +29,7 @@ export const solutionCards = [
     id: "ppa",
     title: "CloudKeeper PPA+",
     description: "Maximize AWS PPA value with our\nadditional benefits.",
-    exploreHref: "#",
+    exploreHref: routes.solutions.ppaPlus,
     icon: "ppa" as const,
   },
 ] as const;

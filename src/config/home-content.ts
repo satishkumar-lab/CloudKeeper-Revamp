@@ -169,7 +169,7 @@ export const uniqueCards = [
   {
     title: "CloudKeeper PPA+",
     description: "Maximize AWS PPA value with our additional benefits.",
-    exploreHref: "#",
+    exploreHref: routes.solutions.ppaPlus,
   },
 ];
 

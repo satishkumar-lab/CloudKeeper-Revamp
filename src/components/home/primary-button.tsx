@@ -10,22 +10,30 @@ export type CtaButtonProps = {
   className?: string;
   /** Fixed height; width follows label length */
   size?: "md" | "sm";
-  /** solid = filled blue; outlineDark = blue border on dark backgrounds */
-  variant?: "solid" | "outlineDark";
+  /** solid = filled blue; outline = blue border on light; outlineDark = on dark */
+  variant?: "solid" | "outline" | "outlineDark";
   showArrow?: boolean;
   fullWidth?: boolean;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  target?: string;
+  rel?: string;
 };
 
-export function CtaArrow({ className }: { className?: string }) {
+export function CtaArrow({
+  className,
+  tone = "white",
+}: {
+  className?: string;
+  tone?: "white" | "blue";
+}) {
   return (
     <span className={cn("relative size-4 shrink-0", className)}>
       <span className="absolute inset-[12%] flex items-center justify-center">
         <span className="rotate-45 transition-transform duration-200 ease-out group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5 group-hover/cta:rotate-0">
           <Image
-            src={homeAssets.arrowCta}
+            src={tone === "blue" ? homeAssets.arrowCtaBlue : homeAssets.arrowCta}
             alt=""
             width={16}
             height={16}
@@ -46,6 +54,8 @@ const sizeStyles = {
 const variantStyles = {
   solid:
     "border-0 bg-[#17a5fb] text-white hover:bg-[#0e95ea] focus-visible:ring-[#17a5fb]/40 focus-visible:ring-offset-2",
+  outline:
+    "border border-[#17a5fb] bg-transparent text-[#17a5fb] hover:bg-[#17a5fb]/10 focus-visible:ring-[#17a5fb]/35 focus-visible:ring-offset-2",
   outlineDark:
     "border border-[#17a5fb] bg-transparent text-white hover:bg-[#17a5fb]/10 focus-visible:ring-[#17a5fb]/35 focus-visible:ring-offset-0",
 } as const;
@@ -61,6 +71,8 @@ export function CtaButton({
   onClick,
   type = "button",
   disabled = false,
+  target,
+  rel,
 }: CtaButtonProps) {
   const classes = cn(
     "group/cta inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-[9.484px]",
@@ -82,13 +94,15 @@ export function CtaButton({
   const content = (
     <>
       {label}
-      {showArrow ? <CtaArrow /> : null}
+      {showArrow ? (
+        <CtaArrow tone={variant === "outline" ? "blue" : "white"} />
+      ) : null}
     </>
   );
 
   if (href && !onClick && type === "button") {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} target={target} rel={rel}>
         {content}
       </Link>
     );

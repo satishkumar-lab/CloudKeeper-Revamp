@@ -3,6 +3,7 @@ export const homeAssets = {
   logo: "/assets/home/ck-logo.svg",
   missionLogo: "/assets/home/mission-logo.svg",
   arrowCta: "/assets/home/arrow-cta.svg",
+  arrowCtaBlue: "/assets/home/arrow-cta-blue.svg",
   bgColors: "/assets/home/bg-colors.png",
   orbitRing: "/assets/home/orbit-ring.svg",
   orbitInner: "/assets/home/orbit-inner.svg",

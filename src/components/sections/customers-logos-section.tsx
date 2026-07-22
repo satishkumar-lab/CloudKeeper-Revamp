@@ -19,20 +19,28 @@ export type CustomersLogosSectionProps = {
   backgroundSrc?: string;
   className?: string;
   id?: string;
+  /** Caps logo render height — smaller reads more polished in dense grids */
+  logoMaxHeight?: number;
 };
 
 function LogoCell({
   logo,
   index,
   reduceMotion,
+  logoMaxHeight,
 }: {
   logo: CustomerLogo;
   index: number;
   reduceMotion: boolean;
+  logoMaxHeight: number;
 }) {
+  const height = Math.min(logo.height, logoMaxHeight);
+  const width = Math.round(logo.width * (height / logo.height));
+
   return (
     <motion.li
-      className="relative flex h-[58px] min-w-0 flex-1 items-center justify-center"
+      className="relative flex min-w-0 flex-1 items-center justify-center"
+      style={{ height: Math.max(logoMaxHeight + 16, 48) }}
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -45,9 +53,10 @@ function LogoCell({
       <img
         src={logo.src}
         alt={logo.name}
-        width={logo.width}
-        height={logo.height}
-        className="max-h-[58px] w-auto max-w-full object-contain object-center"
+        width={width}
+        height={height}
+        className="object-contain object-center"
+        style={{ width, height, maxWidth: "90%" }}
         decoding="async"
       />
     </motion.li>
@@ -64,6 +73,7 @@ export function CustomersLogosSection({
   backgroundSrc = customersLogosAssets.bg,
   className,
   id = "customers-logos",
+  logoMaxHeight = 48,
 }: CustomersLogosSectionProps = {}) {
   const reduceMotion = useReducedMotion() === true;
   const headingId = `${id}-heading`;
@@ -97,11 +107,11 @@ export function CustomersLogosSection({
           {heading}
         </motion.h2>
 
-        <div className="flex w-full flex-col gap-10">
+        <div className="flex w-full flex-col gap-8 lg:gap-10">
           {rows.map((row, rowIndex) => (
             <ul
               key={`row-${rowIndex}`}
-              className="flex w-full flex-col gap-[30px] sm:flex-row sm:items-start sm:gap-[30px]"
+              className="flex w-full flex-col gap-[30px] sm:flex-row sm:items-center sm:gap-[30px]"
             >
               {row.map((logoItem, logoIndex) => (
                 <LogoCell
@@ -109,6 +119,7 @@ export function CustomersLogosSection({
                   logo={logoItem}
                   index={rowIndex * 6 + logoIndex}
                   reduceMotion={reduceMotion}
+                  logoMaxHeight={logoMaxHeight}
                 />
               ))}
             </ul>
