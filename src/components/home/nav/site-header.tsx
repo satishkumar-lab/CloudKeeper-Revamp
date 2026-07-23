@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 
@@ -19,7 +20,30 @@ import {
 import { navAssets } from "@/config/nav-assets";
 import { navLinks, promoContent, type NavLinkItem } from "@/config/nav-content";
 import { getMenuById, type NavMenuId } from "@/config/nav-menus";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
+
+/** Highlight the nav tab that owns the current route. */
+function isNavRouteActive(item: NavLinkItem, pathname: string): boolean {
+  if (item.menuId === "solutions") {
+    return (
+      pathname === routes.solutions.az ||
+      pathname === routes.solutions.ppaPlus ||
+      pathname.startsWith("/solutions/")
+    );
+  }
+
+  if (item.menuId === "platforms") {
+    return (
+      pathname === routes.platformSuite || pathname.startsWith("/platform-suite")
+    );
+  }
+
+  const pathOnly = item.href.split("#")[0] ?? item.href;
+  if (!pathOnly || pathOnly === "/") return false;
+
+  return pathname === pathOnly || pathname.startsWith(`${pathOnly}/`);
+}
 
 function NavChevron({ open, className }: { open?: boolean; className?: string }) {
   return (
@@ -127,6 +151,7 @@ function NavItem({
   menuId,
   isOpen,
   isActive,
+  isCurrentPage,
   onToggle,
   onNavigate,
   className,
@@ -134,6 +159,7 @@ function NavItem({
 }: NavLinkItem & {
   isOpen?: boolean;
   isActive?: boolean;
+  isCurrentPage?: boolean;
   onToggle?: () => void;
   onNavigate?: () => void;
   className?: string;
@@ -159,7 +185,7 @@ function NavItem({
       <span
         className={cn(
           "h-1 w-full rounded-[3px] bg-[#17a5fb] transition-opacity",
-          isActive ? "opacity-100" : "opacity-0",
+          isCurrentPage ? "opacity-100" : "opacity-0",
         )}
         aria-hidden
       />
@@ -175,6 +201,7 @@ function NavItem({
         className={sharedClass}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        aria-current={isCurrentPage ? "page" : undefined}
       >
         {inner}
       </button>
@@ -182,7 +209,12 @@ function NavItem({
   }
 
   return (
-    <Link href={href} onClick={onNavigate} className={sharedClass}>
+    <Link
+      href={href}
+      onClick={onNavigate}
+      className={sharedClass}
+      aria-current={isCurrentPage ? "page" : undefined}
+    >
       {inner}
     </Link>
   );
@@ -203,6 +235,7 @@ function ContactButton({ className }: { className?: string }) {
 }
 
 export function PrimaryNav() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<NavMenuId | null>(null);
   const [openMenu, setOpenMenu] = useState<NavMenuId | null>(null);
@@ -282,22 +315,26 @@ export function PrimaryNav() {
         </Link>
 
         <nav className="hidden flex-1 items-center justify-center xl:flex" aria-label="Primary">
-          {navLinks.map((item) => (
-            <NavItem
-              key={item.label}
-              {...item}
-              isOpen={item.menuId === openMenu}
-              isActive={item.menuId === openMenu}
-              onToggle={item.menuId ? () => toggleMenu(item.menuId!) : undefined}
-              buttonRef={
-                item.menuId
-                  ? (el) => {
-                      if (el) navTriggerRefs.current[item.menuId!] = el;
-                    }
-                  : undefined
-              }
-            />
-          ))}
+          {navLinks.map((item) => {
+            const routeActive = isNavRouteActive(item, pathname);
+            return (
+              <NavItem
+                key={item.label}
+                {...item}
+                isOpen={item.menuId === openMenu}
+                isActive={routeActive || item.menuId === openMenu}
+                isCurrentPage={routeActive}
+                onToggle={item.menuId ? () => toggleMenu(item.menuId!) : undefined}
+                buttonRef={
+                  item.menuId
+                    ? (el) => {
+                        if (el) navTriggerRefs.current[item.menuId!] = el;
+                      }
+                    : undefined
+                }
+              />
+            );
+          })}
         </nav>
 
         <div className="hidden shrink-0 items-center gap-4 xl:flex">
@@ -323,6 +360,8 @@ export function PrimaryNav() {
             </SheetHeader>
             <nav className="mt-6 flex flex-col gap-1" aria-label="Mobile">
               {navLinks.map((item) => {
+                const routeActive = isNavRouteActive(item, pathname);
+
                 if (item.menuId) {
                   const expanded = mobileExpanded === item.menuId;
                   const menu = getMenuById(item.menuId);
@@ -336,13 +375,18 @@ export function PrimaryNav() {
                             current === item.menuId ? null : item.menuId!,
                           )
                         }
-                        className="flex w-full items-center justify-between py-3 text-[15px] font-medium text-black hover:text-[#17a5fb]"
+                        className={cn(
+                          "flex w-full items-center justify-between py-3 text-[15px] font-medium transition-colors hover:text-[#17a5fb]",
+                          routeActive ? "text-[#17a5fb]" : "text-black",
+                        )}
                         aria-expanded={expanded}
+                        aria-current={routeActive ? "page" : undefined}
                       >
                         {item.label}
                         <ChevronDown
                           className={cn(
-                            "size-4 text-[#777777] transition-transform",
+                            "size-4 transition-transform",
+                            routeActive ? "text-[#17a5fb]" : "text-[#777777]",
                             expanded && "rotate-180",
                           )}
                         />
@@ -362,7 +406,11 @@ export function PrimaryNav() {
                     key={item.label}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className="py-3 text-[15px] font-medium text-black hover:text-[#17a5fb]"
+                    className={cn(
+                      "py-3 text-[15px] font-medium transition-colors hover:text-[#17a5fb]",
+                      routeActive ? "text-[#17a5fb]" : "text-black",
+                    )}
+                    aria-current={routeActive ? "page" : undefined}
                   >
                     {item.label}
                   </Link>
