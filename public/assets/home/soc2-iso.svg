@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="80" viewBox="0 0 200 80" fill="none">
-  <rect x="4" y="8" width="88" height="64" rx="8" stroke="#253746" stroke-width="2" fill="white"/>
-  <text x="14" y="48" fill="#253746" font-family="Arial,sans-serif" font-size="14" font-weight="700">SOC 2</text>
-  <rect x="108" y="8" width="88" height="64" rx="8" stroke="#253746" stroke-width="2" fill="white"/>
-  <text x="128" y="48" fill="#253746" font-family="Arial,sans-serif" font-size="14" font-weight="700">ISO</text>
-</svg>

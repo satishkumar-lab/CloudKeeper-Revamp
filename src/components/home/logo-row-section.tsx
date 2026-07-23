@@ -127,6 +127,3 @@ export function LogoRowSection() {
     </section>
   );
 }
-
-/** @deprecated Use LogoRowSection */
-export const LogoMarqueeSection = LogoRowSection;
