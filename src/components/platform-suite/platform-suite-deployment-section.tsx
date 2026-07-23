@@ -22,9 +22,10 @@ const selectTransition = {
 export function PlatformSuiteDeploymentSection() {
   const reduceMotion = useReducedMotion() === true;
   const { heading, subtitle, options, cta } = platformSuiteDeployment;
+  type OptionId = (typeof options)[number]["id"];
   const defaultId =
-    options.find((o) => o.variant === "filled")?.id ?? options[0]?.id;
-  const [activeId, setActiveId] = useState(defaultId);
+    (options.find((o) => o.variant === "filled")?.id ?? options[0]?.id) as OptionId;
+  const [activeId, setActiveId] = useState<OptionId>(defaultId);
 
   return (
     <section
@@ -227,7 +228,7 @@ export function PlatformSuiteDeploymentSection() {
                       <motion.div
                         className={cn(
                           "relative z-10 flex min-w-0 flex-1 flex-col",
-                          option.note ? "gap-2.5" : "",
+                          "note" in option && option.note ? "gap-2.5" : "",
                         )}
                         animate={{ opacity: isActive ? 1 : 0.65 }}
                         transition={selectTransition}
@@ -238,7 +239,7 @@ export function PlatformSuiteDeploymentSection() {
                             {option.description}
                           </span>
                         </p>
-                        {option.note ? (
+                        {"note" in option && option.note ? (
                           <p className="whitespace-nowrap rounded-sm bg-[rgba(32,73,110,0.1)] px-[15px] py-1 text-left text-[11px] leading-[22px] tracking-[0.4px] text-white sm:text-xs sm:leading-[27px] sm:tracking-[0.5px]">
                             {option.note}
                           </p>
