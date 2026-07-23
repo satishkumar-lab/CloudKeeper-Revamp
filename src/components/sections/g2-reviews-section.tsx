@@ -5,13 +5,13 @@ import { useCallback, useState } from "react";
 
 import { CtaButton } from "@/components/home/primary-button";
 import {
-  WHY_US_G2_BG,
-  whyUsG2Assets,
-  whyUsG2Content,
-  whyUsG2Reviews,
-  type WhyUsG2Review,
-  type WhyUsG2TextSegment,
-} from "@/config/why-us-g2";
+  G2_REVIEWS_BG,
+  defaultG2Reviews,
+  defaultG2ReviewsContent,
+  g2ReviewsAssets,
+  type G2Review,
+  type G2ReviewTextSegment,
+} from "@/config/g2-reviews-section";
 import { cn } from "@/lib/utils";
 
 const easeSmooth = [0.16, 1, 0.3, 1] as const;
@@ -55,7 +55,18 @@ const COVERFLOW_SLOT = {
   "1": { x: SIDE_X, scale: SIDE_SCALE, y: 28, zIndex: 1 },
 } as const;
 
-function ReviewBody({ segments }: { segments: WhyUsG2TextSegment[] }) {
+export type G2ReviewsSectionProps = {
+  heading?: string;
+  rankHighlight?: string;
+  rankRest?: string;
+  reviews?: G2Review[];
+  ctaHref?: string;
+  ctaLabel?: string;
+  className?: string;
+  id?: string;
+};
+
+function ReviewBody({ segments }: { segments: G2ReviewTextSegment[] }) {
   return (
     <p className="whitespace-pre-wrap text-base font-light leading-7 text-black">
       {segments.map((segment, i) =>
@@ -78,7 +89,7 @@ function G2Stars() {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           key={i}
-          src={whyUsG2Assets.starFull}
+          src={g2ReviewsAssets.starFull}
           alt=""
           width={20}
           height={19}
@@ -94,7 +105,7 @@ function CompanyLogo({
   company,
   alt,
 }: {
-  company?: WhyUsG2Review["company"];
+  company?: G2Review["company"];
   alt?: string;
 }) {
   if (!company) return null;
@@ -103,7 +114,7 @@ function CompanyLogo({
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={whyUsG2Assets.logoSeclore}
+        src={g2ReviewsAssets.logoSeclore}
         alt={alt ?? "Seclore"}
         width={151}
         height={17}
@@ -121,7 +132,7 @@ function CompanyLogo({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={whyUsG2Assets.logoGliderText}
+        src={g2ReviewsAssets.logoGliderText}
         alt=""
         width={36}
         height={5}
@@ -130,7 +141,7 @@ function CompanyLogo({
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={whyUsG2Assets.logoGliderMark}
+        src={g2ReviewsAssets.logoGliderMark}
         alt=""
         width={18}
         height={19}
@@ -194,7 +205,7 @@ function FeaturedReviewCard({
   review,
   className,
 }: {
-  review: WhyUsG2Review;
+  review: G2Review;
   className?: string;
 }) {
   return (
@@ -206,7 +217,7 @@ function FeaturedReviewCard({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={whyUsG2Assets.quoteLarge}
+        src={g2ReviewsAssets.quoteLarge}
         alt=""
         width={40}
         height={33}
@@ -216,7 +227,7 @@ function FeaturedReviewCard({
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={whyUsG2Assets.quoteClose}
+        src={g2ReviewsAssets.quoteClose}
         alt=""
         width={40}
         height={30}
@@ -230,7 +241,7 @@ function FeaturedReviewCard({
           <div className="flex items-center gap-[15px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={whyUsG2Assets.g2Icon}
+              src={g2ReviewsAssets.g2Icon}
               alt=""
               width={32}
               height={32}
@@ -259,10 +270,22 @@ function FeaturedReviewCard({
   );
 }
 
-/** Figma 8824:40361 — G2 customer reviews carousel (Lens-style coverflow) */
-export function WhyUsG2Section() {
+/**
+ * Shared G2 customer reviews carousel (Figma 8824:40361 — Lens-style coverflow).
+ * Defaults match the Why Us / marketing copy; pass props to override per page.
+ */
+export function G2ReviewsSection({
+  heading = defaultG2ReviewsContent.heading,
+  rankHighlight = defaultG2ReviewsContent.rankHighlight,
+  rankRest = defaultG2ReviewsContent.rankRest,
+  reviews = defaultG2Reviews,
+  ctaHref = defaultG2ReviewsContent.cta.href,
+  ctaLabel = defaultG2ReviewsContent.cta.label,
+  className,
+  id = "g2-reviews",
+}: G2ReviewsSectionProps) {
   const reduceMotion = useReducedMotion() === true;
-  const total = whyUsG2Reviews.length;
+  const total = reviews.length;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -274,14 +297,15 @@ export function WhyUsG2Section() {
     [total],
   );
 
-  const featured = whyUsG2Reviews[index]!;
-  const { heading, rankHighlight, rankRest, cta } = whyUsG2Content;
+  const featured = reviews[index]!;
+  const headingId = `${id}-heading`;
 
   return (
     <section
-      className="relative overflow-hidden font-sans"
-      style={{ backgroundImage: WHY_US_G2_BG }}
-      aria-labelledby="why-us-g2-heading"
+      id={id}
+      className={cn("relative overflow-hidden font-sans", className)}
+      style={{ backgroundImage: G2_REVIEWS_BG }}
+      aria-labelledby={headingId}
     >
       {/* Abstract decor — top-left */}
       <div
@@ -290,14 +314,14 @@ export function WhyUsG2Section() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={whyUsG2Assets.decorEllipse1}
+          src={g2ReviewsAssets.decorEllipse1}
           alt=""
           className="absolute left-[-23px] top-[49px] size-[113px] max-w-none"
           decoding="async"
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={whyUsG2Assets.decorEllipse2}
+          src={g2ReviewsAssets.decorEllipse2}
           alt=""
           className="absolute left-[41px] top-[4px] size-[73px] max-w-none mix-blend-multiply"
           decoding="async"
@@ -316,7 +340,7 @@ export function WhyUsG2Section() {
           }}
         >
           <h2
-            id="why-us-g2-heading"
+            id={headingId}
             className="text-[clamp(1.75rem,3.2vw,2.5rem)] font-normal leading-[1.5] text-black"
           >
             {heading}
@@ -344,7 +368,7 @@ export function WhyUsG2Section() {
             aria-live="polite"
             aria-atomic="true"
           >
-            {whyUsG2Reviews.map((review, itemIndex) => {
+            {reviews.map((review, itemIndex) => {
               const offset = coverflowOffset(itemIndex, index, total);
               const slot =
                 COVERFLOW_SLOT[String(offset) as keyof typeof COVERFLOW_SLOT];
@@ -457,13 +481,13 @@ export function WhyUsG2Section() {
           }}
         >
           <CtaButton
-            href={cta.href}
+            href={ctaHref}
             variant="solid"
             className="h-[52px]"
             target="_blank"
             rel="noopener noreferrer"
           >
-            {cta.label}
+            {ctaLabel}
           </CtaButton>
         </motion.div>
       </div>

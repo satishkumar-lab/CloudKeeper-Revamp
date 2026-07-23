@@ -8,7 +8,7 @@ export const whyUsIsgQuoteAssets = {
   decor: `${BASE}/decor-right.png`,
 } as const;
 
-/** Same radial family as DarkBannerCta / Figma card bg */
+/** Same radial family as DarkCtaBanner / Figma card bg */
 export const WHY_US_ISG_QUOTE_BG =
   "radial-gradient(circle at 50% 50%, rgba(3,33,81,1) 0%, rgba(2,17,41,1) 50%, rgba(1,8,20,1) 75%, rgba(0,4,10,1) 87.5%, rgba(0,0,0,1) 100%)";
 

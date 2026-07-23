@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { CtaButton } from "@/components/home/primary-button";
 import {
@@ -13,6 +13,7 @@ import {
   platformTabIconLayout,
   platformTabsContent,
   platformsAssets,
+  type PlatformTab,
   type PlatformTabId,
 } from "@/config/platforms-section";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,22 @@ const TAB_GRADIENT =
 
 /** How long each tab stays before auto-advancing */
 const TAB_AUTO_DURATION_MS = 12000;
+
+export type PlatformsSectionProps = {
+  id?: string;
+  heading?: string;
+  subtitle?: string;
+  tabs?: readonly PlatformTab[];
+  ctaLabel?: string;
+  /** Home: stretch full width. Platform Suite: hug content + center. */
+  tabsLayout?: "stretch" | "center";
+  /** Gap between heading and subtitle. Default 20px. */
+  titleGap?: "10" | "20";
+  /** Home-only “Exclusive value add-ons” bar. Default true. */
+  showHomeAddons?: boolean;
+  /** Optional footer slot (e.g. Platform Suite value-add cards). */
+  footer?: ReactNode;
+};
 
 function PlatformTabIcon({ tabId, icon }: { tabId: PlatformTabId; icon: string }) {
   const layout = platformTabIconLayout[tabId];
@@ -60,6 +77,7 @@ function PlatformTabButton({
   active,
   progress,
   autoPlay,
+  layout,
   onClick,
 }: {
   tabId: PlatformTabId;
@@ -69,13 +87,19 @@ function PlatformTabButton({
   /** 0–1 fill amount for the active tab progress line */
   progress: number;
   autoPlay: boolean;
+  layout: "stretch" | "center";
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="relative flex w-full min-w-0 flex-1 basis-0 flex-col items-stretch gap-2.5 bg-white p-5 text-left"
+      className={cn(
+        "relative flex flex-col items-stretch gap-2.5 bg-white text-left",
+        layout === "stretch"
+          ? "w-full min-w-0 flex-1 basis-0 p-5"
+          : "w-auto shrink-0 px-2.5 py-5 sm:px-5",
+      )}
       aria-selected={active}
       role="tab"
     >
@@ -279,9 +303,19 @@ function ValueAddonsBar() {
   );
 }
 
-/** Figma 8251:20839 — Tabs-carasoul-platforms */
-export function PlatformsSection() {
-  const [activeTabId, setActiveTabId] = useState<PlatformTabId>("lens");
+/** Figma 8251:20839 — Tabs-carasoul-platforms (home: 4 tabs; Platform Suite: 3) */
+export function PlatformsSection({
+  id = "platforms",
+  heading = "Our All-in-One FinOps Platform Suite",
+  subtitle = "Complete visibility, intelligent optimization, and measurable ROI - in one unified platform, backed by unlimited support by cloud experts",
+  tabs = platformTabsContent,
+  ctaLabel = "Explore Now",
+  tabsLayout = "stretch",
+  titleGap = "20",
+  showHomeAddons = true,
+  footer,
+}: PlatformsSectionProps = {}) {
+  const [activeTabId, setActiveTabId] = useState<PlatformTabId>(tabs[0]?.id ?? "lens");
   const [activeSlide, setActiveSlide] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -293,11 +327,10 @@ export function PlatformsSection() {
   const rafRef = useRef<number | null>(null);
   const lastTsRef = useRef<number | null>(null);
 
-  const activeTab =
-    platformTabsContent.find((tab) => tab.id === activeTabId) ?? platformTabsContent[0];
+  const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
-  const goToTab = useCallback((id: PlatformTabId) => {
-    setActiveTabId(id);
+  const goToTab = useCallback((nextId: PlatformTabId) => {
+    setActiveTabId(nextId);
     setActiveSlide(0);
     progressRef.current = 0;
     setProgress(0);
@@ -305,10 +338,10 @@ export function PlatformsSection() {
   }, []);
 
   const goToNextTab = useCallback(() => {
-    const currentIndex = platformTabsContent.findIndex((tab) => tab.id === activeTabId);
-    const nextIndex = (currentIndex + 1) % platformTabsContent.length;
-    goToTab(platformTabsContent[nextIndex].id);
-  }, [activeTabId, goToTab]);
+    const currentIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+    const nextIndex = (currentIndex + 1) % tabs.length;
+    goToTab(tabs[nextIndex].id);
+  }, [activeTabId, goToTab, tabs]);
 
   // Respect reduced motion
   useEffect(() => {
@@ -375,25 +408,31 @@ export function PlatformsSection() {
     };
   }, [activeTabId, autoPlay, goToNextTab, isPaused, sectionInView]);
 
+  if (!activeTab) return null;
+
   return (
     <section
       ref={sectionRef}
-      id="platforms"
+      id={id}
       className="bg-white font-sans"
-      aria-labelledby="platforms-heading"
+      aria-labelledby={`${id}-heading`}
     >
       <div className="mx-auto w-full max-w-[1440px] px-5 py-16 sm:px-8 lg:px-[90px] lg:py-[90px]">
         <ScrollRevealGroup className="mx-auto flex max-w-[1260px] flex-col items-center gap-[30px]">
-          <ScrollRevealItem className="flex max-w-[1170px] flex-col items-center gap-5 text-center text-black">
+          <ScrollRevealItem
+            className={cn(
+              "flex max-w-[1170px] flex-col items-center text-center text-black",
+              titleGap === "10" ? "gap-2.5" : "gap-5",
+            )}
+          >
             <h2
-              id="platforms-heading"
+              id={`${id}-heading`}
               className="w-full text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.5] tracking-[-1px] lg:text-[40px]"
             >
-              Our All-in-One FinOps Platform Suite
+              {heading}
             </h2>
             <p className="w-full text-lg leading-[30px] tracking-[-0.3px]">
-              Complete visibility, intelligent optimization, and measurable ROI - in one
-              unified platform, backed by unlimited support by cloud experts
+              {subtitle}
             </p>
           </ScrollRevealItem>
 
@@ -411,11 +450,16 @@ export function PlatformsSection() {
             >
               {/* Tab bar — Figma 2987:24276 */}
               <div
-                className="flex w-full flex-col items-stretch justify-center sm:flex-row"
+                className={cn(
+                  "flex w-full flex-col items-stretch sm:flex-row",
+                  tabsLayout === "center"
+                    ? "justify-center gap-0 sm:gap-10"
+                    : "justify-center",
+                )}
                 role="tablist"
                 aria-label="Platform products"
               >
-                {platformTabsContent.map((tab) => (
+                {tabs.map((tab) => (
                   <PlatformTabButton
                     key={tab.id}
                     tabId={tab.id}
@@ -424,6 +468,7 @@ export function PlatformsSection() {
                     active={tab.id === activeTabId}
                     progress={progress}
                     autoPlay={autoPlay}
+                    layout={tabsLayout}
                     onClick={() => goToTab(tab.id)}
                   />
                 ))}
@@ -431,9 +476,8 @@ export function PlatformsSection() {
 
               {/* Content card row — Figma 8297:8720 */}
               <div className="flex flex-col items-stretch lg:flex-row lg:items-center">
-                {/* Left panel — fixed width; headlines are always 3 lines */}
-                <div className="flex h-[483px] w-full shrink-0 flex-col overflow-hidden rounded-2xl bg-[#f3f8ff] p-[30px] lg:w-[520px]">
-                  <div className="flex w-full max-w-[440px] flex-col gap-20">
+                <div className="flex min-h-[483px] w-full shrink-0 flex-col overflow-hidden rounded-2xl bg-[#f3f8ff] p-[30px] lg:h-[483px] lg:w-[500px]">
+                  <div className="flex w-full max-w-[440px] flex-col gap-[50px]">
                     <div className="flex flex-col gap-5">
                       <div className="flex flex-col gap-5">
                         <p className="py-2 text-sm font-light uppercase leading-7 text-black">
@@ -444,7 +488,7 @@ export function PlatformsSection() {
                         </h3>
                       </div>
 
-                      <CtaButton href={activeTab.exploreHref}>Explore Now</CtaButton>
+                      <CtaButton href={activeTab.exploreHref}>{ctaLabel}</CtaButton>
                     </div>
 
                     <FeatureTags tags={activeTab.featureTags} />
@@ -462,9 +506,15 @@ export function PlatformsSection() {
             </div>
           </ScrollRevealItem>
 
-          <ScrollRevealItem className="w-full">
-            <ValueAddonsBar />
-          </ScrollRevealItem>
+          {showHomeAddons ? (
+            <ScrollRevealItem className="w-full">
+              <ValueAddonsBar />
+            </ScrollRevealItem>
+          ) : null}
+
+          {footer ? (
+            <ScrollRevealItem className="w-full">{footer}</ScrollRevealItem>
+          ) : null}
         </ScrollRevealGroup>
       </div>
     </section>

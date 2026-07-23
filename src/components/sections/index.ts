@@ -18,13 +18,18 @@ export {
   type CustomersLogosSectionProps,
 } from "@/components/sections/customers-logos-section";
 export {
+  G2ReviewsSection,
+  type G2ReviewsSectionProps,
+} from "@/components/sections/g2-reviews-section";
+export {
   LightBannerCtaSection,
   type LightBannerCtaSectionProps,
 } from "@/components/sections/light-banner-cta-section";
 export {
-  DarkBannerCtaSection,
-  type DarkBannerCtaSectionProps,
-} from "@/components/sections/dark-banner-cta-section";
+  DarkCtaBanner,
+  DarkCtaBannerSection,
+  type DarkCtaBannerSectionProps,
+} from "@/components/sections/dark-cta-banner-section";
 export {
   CloudPartnerSection,
   type CloudPartnerSectionProps,
@@ -41,3 +46,15 @@ export {
   type SiteFooterSectionProps,
   type SiteFooterProps,
 } from "@/components/sections/site-footer-section";
+export {
+  CardOverlappingSection,
+  type CardOverlappingSectionProps,
+} from "@/components/sections/card-overlapping-section";
+export {
+  WhyChooseCkAsSection,
+  type WhyChooseCkAsSectionProps,
+} from "@/components/sections/why-choose-ck-as-section";
+export {
+  CloudKeeperAdvantageSection,
+  type CloudKeeperAdvantageSectionProps,
+} from "@/components/sections/cloudkeeper-advantage-section";

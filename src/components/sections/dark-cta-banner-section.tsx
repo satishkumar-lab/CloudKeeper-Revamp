@@ -6,33 +6,41 @@ import { motion, useReducedMotion } from "framer-motion";
 import { CtaButton } from "@/components/home/primary-button";
 import {
   DARK_BANNER_CTA_BG,
-  darkBannerCtaAssets,
-  type DarkBannerCtaContent,
-} from "@/config/dark-banner-cta-section";
+  darkCtaBannerAssets,
+  defaultDarkCtaBannerContent,
+} from "@/config/dark-cta-banner-section";
 import { cn } from "@/lib/utils";
 
 const easeSmooth = [0.16, 1, 0.3, 1] as const;
 
-export type DarkBannerCtaSectionProps = DarkBannerCtaContent & {
-  backgroundSrc?: string;
+export type DarkCtaBannerSectionProps = {
+  heading?: string;
+  /** Supporting line under the heading */
+  subtext?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  ctaExternal?: boolean;
   className?: string;
   id?: string;
 };
 
 /**
- * Shared dark Banner-CTA (Figma: Banner-CTA - Section).
+ * Shared dark CTA banner (Figma: Banner-CTA - Section).
  * Left copy + right outline CTA on dark navy.
  */
-export function DarkBannerCtaSection({
-  heading,
-  body,
-  cta,
+export function DarkCtaBannerSection({
+  heading = defaultDarkCtaBannerContent.heading,
+  subtext = defaultDarkCtaBannerContent.subtext,
+  ctaLabel = defaultDarkCtaBannerContent.ctaLabel,
+  ctaHref = defaultDarkCtaBannerContent.ctaHref,
+  ctaExternal,
   className,
-  id = "dark-banner-cta",
-}: DarkBannerCtaSectionProps) {
+  id = "dark-cta-banner",
+}: DarkCtaBannerSectionProps = {}) {
   const reduceMotion = useReducedMotion() === true;
   const headingId = `${id}-heading`;
-  const isExternal = cta.external === true || /^https?:\/\//.test(cta.href);
+  const isExternal =
+    ctaExternal === true || /^https?:\/\//.test(ctaHref);
 
   return (
     <section
@@ -59,7 +67,7 @@ export function DarkBannerCtaSection({
       >
         <div className="rotate-30">
           <Image
-            src={darkBannerCtaAssets.deco}
+            src={darkCtaBannerAssets.deco}
             alt=""
             width={374}
             height={364}
@@ -84,7 +92,7 @@ export function DarkBannerCtaSection({
               {heading}
             </h2>
             <p className="text-lg font-normal leading-[1.5] text-white">
-              {body}
+              {subtext}
             </p>
           </motion.div>
 
@@ -96,14 +104,14 @@ export function DarkBannerCtaSection({
             transition={{ duration: 0.7, ease: easeSmooth, delay: 0.08 }}
           >
             <CtaButton
-              href={cta.href}
+              href={ctaHref}
               variant="outlineDark"
               className="h-[52px] px-[29px]"
               {...(isExternal
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}
             >
-              {cta.label}
+              {ctaLabel}
             </CtaButton>
           </motion.div>
         </div>
@@ -111,3 +119,6 @@ export function DarkBannerCtaSection({
     </section>
   );
 }
+
+/** Preferred short alias for the dark CTA banner section */
+export const DarkCtaBanner = DarkCtaBannerSection;

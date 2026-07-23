@@ -4,7 +4,7 @@ import { routes } from "@/config/routes";
 export const navLinks = [
   { label: "Why Us?", href: routes.whyUs, hasDropdown: false },
   { label: "Solutions", href: "#solutions", hasDropdown: true },
-  { label: "Platforms", href: "#platforms", hasDropdown: true },
+  { label: "Platforms", href: routes.platformSuite, hasDropdown: true },
   { label: "Capabilities", href: "#capabilities", hasDropdown: true },
   { label: "Insights", href: "#insights", hasDropdown: true },
   { label: "Success Stories", href: "#testimonials", hasDropdown: false },

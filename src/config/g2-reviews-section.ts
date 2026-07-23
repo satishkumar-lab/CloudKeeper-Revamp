@@ -1,8 +1,8 @@
-/** Figma 8824:40361 — card: g2_review_customer */
+/** Shared G2 reviews section — reusable across product/marketing pages. */
 
-const BASE = "/assets/why-us/g2";
+const BASE = "/assets/g2";
 
-export const whyUsG2Assets = {
+export const g2ReviewsAssets = {
   g2Icon: `${BASE}/g2-icon.svg`,
   g2Logo: `${BASE}/g2-logo.png`,
   starsSmall: `${BASE}/stars-small.svg`,
@@ -18,24 +18,34 @@ export const whyUsG2Assets = {
 } as const;
 
 /** Soft blue wash — Figma card background */
-export const WHY_US_G2_BG =
+export const G2_REVIEWS_BG =
   "linear-gradient(-1deg, rgba(226, 240, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 54%), #ffffff";
 
-export type WhyUsG2TextSegment = {
+export type G2ReviewTextSegment = {
   text: string;
   emphasis?: boolean;
 };
 
-export type WhyUsG2Review = {
+export type G2Review = {
   id: string;
   name: string;
   role: string;
-  segments: WhyUsG2TextSegment[];
+  segments: G2ReviewTextSegment[];
   company?: "glider" | "seclore";
   companyAlt?: string;
 };
 
-export const whyUsG2Content = {
+export type G2ReviewsContent = {
+  heading: string;
+  rankHighlight: string;
+  rankRest: string;
+  cta: {
+    label: string;
+    href: string;
+  };
+};
+
+export const defaultG2ReviewsContent = {
   heading: "Pioneering end-to-end cloud management",
   rankHighlight: "Ranked #1",
   rankRest:
@@ -44,9 +54,9 @@ export const whyUsG2Content = {
     label: "Read all reviews on G2",
     href: "https://www.g2.com/products/cloudkeeper/reviews",
   },
-} as const;
+} as const satisfies G2ReviewsContent;
 
-export const whyUsG2Reviews: WhyUsG2Review[] = [
+export const defaultG2Reviews: G2Review[] = [
   {
     id: "aakash",
     name: "Aakash Sharma,",

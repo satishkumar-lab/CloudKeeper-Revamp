@@ -74,16 +74,6 @@ export const whyUsHero = {
   ] as const satisfies readonly WhyUsStatCard[],
 } as const;
 
-/** Figma 99:9969 — Banner-CTA - Section (dark) */
-export const whyUsDarkBannerCta = {
-  heading: "They accomplished it!",
-  body: "Are you ready to take your cloud journey to new heights?",
-  cta: {
-    label: "Check the Report",
-    href: "#",
-  },
-} as const;
-
 export const whyUsCustomersLogosHeading = "Trusted by 400+ Global Customers";
 
 export const whyUsMeta = {

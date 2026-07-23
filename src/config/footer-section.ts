@@ -65,7 +65,7 @@ export const footerCol1Top: readonly FooterGroup[] = [
   {
     title: "Platform Suite",
     links: [
-      { label: "Overview", href: "#" },
+      { label: "Overview", href: routes.platformSuite },
       { label: "CloudKeeper Commit", href: "#" },
       { label: "CloudKeeper Tuner - AWS", href: "#" },
       { label: "CloudKeeper Tuner - GCP", href: "#" },

@@ -18,7 +18,7 @@ export const navLinks: NavLinkItem[] = [
   },
   {
     label: "Platforms",
-    href: "/#platforms",
+    href: routes.platformSuite,
     hasDropdown: true,
     menuId: "platforms",
   },

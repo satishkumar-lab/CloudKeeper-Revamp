@@ -178,6 +178,16 @@
   }
 }
 
+/* Deployment card — loading-style stroke travels around border */
+@keyframes dep-border-travel {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
 /* Logo row — pause marquee on hover */
 .group\/marquee:hover .logo-marquee-track {
   animation-play-state: paused;

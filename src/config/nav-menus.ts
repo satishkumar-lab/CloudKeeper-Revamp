@@ -82,7 +82,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
     id: "platforms",
     layout: "platforms",
     panelClassName: "w-[min(100%,1280px)] min-h-[318px]",
-    promo: { type: "platforms", href: "#" },
+    promo: { type: "platforms", href: routes.platformSuite },
     sections: [
       {
         title: "Platform Suite",
@@ -90,7 +90,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
         items: [
           {
             label: "Overview",
-            href: "#",
+            href: routes.platformSuite,
             description: LOREM,
             gridColumn: 1,
             gridRow: 1,

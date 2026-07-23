@@ -2,6 +2,7 @@
 export const routes = {
   home: "/",
   whyUs: "/why-us",
+  platformSuite: "/platform-suite",
   solutions: {
     az: "/solutions/cloudkeeper-az",
     ppaPlus: "/solutions/cloudkeeper-ppa-plus",
