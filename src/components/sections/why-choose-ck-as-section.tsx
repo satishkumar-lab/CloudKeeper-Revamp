@@ -240,6 +240,10 @@ function WhyChooseStatCard({
 
 /**
  * Shared “Why choose CloudKeeper as…” stats + badges + CTA section.
+ *
+ * **Variant 1 — 3 cards + AWS & GCP logos**
+ * (Platform Suite / CK_Commit). Also exported as `WhyChooseThreeCardsSection`.
+ *
  * Pass heading / cards / badges / cta to customize per page.
  */
 export function WhyChooseCkAsSection({
@@ -339,3 +343,7 @@ export function WhyChooseCkAsSection({
     </section>
   );
 }
+
+/** Alias — Variant 1 (3 cards + AWS/GCP). Prefer this name in new code. */
+export const WhyChooseThreeCardsSection = WhyChooseCkAsSection;
+export type WhyChooseThreeCardsSectionProps = WhyChooseCkAsSectionProps;

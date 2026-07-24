@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="118.978" height="115.539" viewBox="0 0 118.978 115.539" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M50.771 115.539C59.2752 106.344 70.1398 84.6242 45.5643 71.3009C21.2771 58.1338 -4.89924 35.1844 0.786921 6.76578L111.168 0L118.978 98.364L50.771 115.539Z" fill="url(#metric_arc_4)"/>
+<defs>
+<linearGradient id="metric_arc_4" x1="0" y1="0" x2="1" y2="1">
+<stop stop-color="#17A5FB" stop-opacity="0.18"/>
+<stop offset="0.5" stop-color="#9A4BFF" stop-opacity="0.10"/>
+<stop offset="1" stop-color="#E80584" stop-opacity="0.16"/>
+</linearGradient>
+</defs>
+</svg>

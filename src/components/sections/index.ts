@@ -60,8 +60,18 @@ export {
 } from "@/components/sections/card-overlapping-section";
 export {
   WhyChooseCkAsSection,
+  WhyChooseThreeCardsSection,
   type WhyChooseCkAsSectionProps,
+  type WhyChooseThreeCardsSectionProps,
 } from "@/components/sections/why-choose-ck-as-section";
+export {
+  WhyChooseFourCardsFiveLogosSection,
+  type WhyChooseFourCardsFiveLogosSectionProps,
+} from "@/components/sections/why-choose-four-cards-five-logos-section";
+export {
+  WhyChooseAwsPunchSection,
+  type WhyChooseAwsPunchSectionProps,
+} from "@/components/sections/why-choose-aws-punch-section";
 export {
   CloudKeeperAdvantageSection,
   type CloudKeeperAdvantageSectionProps,

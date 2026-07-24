@@ -3,6 +3,9 @@ export const routes = {
   home: "/",
   whyUs: "/why-us",
   platformSuite: "/platform-suite",
+  platforms: {
+    commit: "/platform-suite/cloudkeeper-commit",
+  },
   solutions: {
     az: "/solutions/cloudkeeper-az",
     ppaPlus: "/solutions/cloudkeeper-ppa-plus",

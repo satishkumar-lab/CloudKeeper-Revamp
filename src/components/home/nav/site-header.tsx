@@ -35,7 +35,9 @@ function isNavRouteActive(item: NavLinkItem, pathname: string): boolean {
 
   if (item.menuId === "platforms") {
     return (
-      pathname === routes.platformSuite || pathname.startsWith("/platform-suite")
+      pathname === routes.platformSuite ||
+      pathname === routes.platforms.commit ||
+      pathname.startsWith("/platform-suite")
     );
   }
 

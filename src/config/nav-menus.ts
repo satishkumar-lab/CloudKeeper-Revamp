@@ -97,7 +97,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
           },
           {
             label: "CloudKeeper Commit",
-            href: "#",
+            href: routes.platforms.commit,
             description: "Rate Optimization",
             gridColumn: 2,
             gridRow: 1,
