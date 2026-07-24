@@ -5,7 +5,7 @@ import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import {
   CloudPartnerSection,
   ContactCtaSection,
-  CustomersLogosSection,
+  CustomersLogosBlueSection,
   IndustryRecognitionSection,
   RelatedResourcesSection,
   SiteFooterSection,
@@ -38,7 +38,7 @@ export function AzPageContent() {
         </ScrollReveal>
 
         <ScrollReveal variant="up">
-          <CustomersLogosSection heading="Our CloudKeeper AZ Customers" />
+          <CustomersLogosBlueSection heading="Our CloudKeeper AZ Customers" />
         </ScrollReveal>
 
         <ScrollReveal variant="fade">
