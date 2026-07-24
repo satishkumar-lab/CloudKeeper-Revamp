@@ -39,6 +39,8 @@ export type CustomersLogosSectionProps = {
    * Pass `true` for default `/assets/customers/bg.png`, a custom src, or omit for white.
    */
   backgroundSrc?: string | true;
+  /** Overrides inner stack spacing (gap / py). Merged after defaults. */
+  contentClassName?: string;
 };
 
 function LogoImage({
@@ -168,6 +170,7 @@ export function CustomersLogosSection({
   ctaLabel = "See all success stories",
   variant = "grid",
   backgroundSrc,
+  contentClassName,
 }: CustomersLogosSectionProps = {}) {
   const reduceMotion = useReducedMotion() === true;
   const headingId = `${id}-heading`;
@@ -206,6 +209,7 @@ export function CustomersLogosSection({
           isMarquee
             ? "max-w-[1440px] px-0"
             : "max-w-[1280px] px-5 sm:px-8 lg:px-0",
+          contentClassName,
         )}
       >
         <motion.h2

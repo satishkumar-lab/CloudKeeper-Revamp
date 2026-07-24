@@ -3,7 +3,7 @@
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import {
   ContactCtaSection,
-  CustomersLogosSection,
+  CustomersLogosBlueSection,
   IndustryRecognitionSection,
   LightBannerCtaSection,
   RelatedResourcesSection,
@@ -71,7 +71,7 @@ export function PpaPlusPageContent() {
         </ScrollReveal>
 
         <ScrollReveal variant="fade">
-          <CustomersLogosSection
+          <CustomersLogosBlueSection
             heading={ppaPlusCustomersLogosContent.heading}
             rows={ppaPlusCustomersLogosContent.rows}
             logoMaxHeight={43}

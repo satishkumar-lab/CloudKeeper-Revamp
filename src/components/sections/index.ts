@@ -18,6 +18,14 @@ export {
   type CustomersLogosSectionProps,
 } from "@/components/sections/customers-logos-section";
 export {
+  CustomersLogosWhiteSection,
+  type CustomersLogosWhiteSectionProps,
+} from "@/components/sections/customers-logos-white-section";
+export {
+  CustomersLogosBlueSection,
+  type CustomersLogosBlueSectionProps,
+} from "@/components/sections/customers-logos-blue-section";
+export {
   G2ReviewsSection,
   type G2ReviewsSectionProps,
 } from "@/components/sections/g2-reviews-section";
