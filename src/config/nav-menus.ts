@@ -104,7 +104,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
           },
           {
             label: "FinOps for AI",
-            href: "#",
+            href: routes.platforms.finopsForAi,
             description: "AI cost optimization",
             isNew: true,
             gridColumn: 3,
@@ -117,7 +117,7 @@ export const navMegaMenus: Record<NavMenuId, NavMegaMenu> = {
             gridColumn: 1,
             gridRow: 2,
             children: [
-              { label: "AWS", href: "#" },
+              { label: "AWS", href: routes.platforms.tunerAws },
               { label: "Google Cloud", href: "#" },
               {
                 label: "Kubernetes Tuner",

@@ -1,17 +1,30 @@
 /** Shared overlapping / sticky card stack section content. */
 
+export type CardOverlappingTagVariant = "default" | "featured";
+
 export type CardOverlappingCard = {
   id: string;
-  tag: string;
+  /** Omit to hide the pill (FinOps cards 2 / 4 / 5). */
+  tag?: string;
+  /** `featured` = gradient text + stars (Our New Offering / Launching Soon). */
+  tagVariant?: CardOverlappingTagVariant;
   title: string;
-  description: string;
+  /** Paragraph body — used when `bullets` is absent (Platform Suite). */
+  description?: string;
+  /** Bullet list body — preferred when present (FinOps for AI). */
+  bullets?: string[];
   number: string;
   visual: string;
+  /** How the visual fills its frame. Default `contain`. */
+  visualFit?: "contain" | "cover";
+  /** Extra zoom for visuals with baked-in padding (e.g. 1.35). */
+  visualScale?: number;
 };
 
 export type CardOverlappingContent = {
   headingLine1: string;
-  headingLine2: string;
+  /** Optional second line; omit / empty → single-line heading. */
+  headingLine2?: string;
   subtitleBefore: string;
   subtitleAccent: string;
   subtitleAfter: string;

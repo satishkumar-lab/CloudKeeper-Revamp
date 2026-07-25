@@ -98,6 +98,15 @@ export default function RootLayout({
       lang="en"
       className={`${metropolis.variable} ${geistMono.variable} ${robotoCondensed.variable}`}
     >
+      <head>
+        {/* Disable browser scroll restore before paint so refresh always starts at top */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0)}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-dvh font-sans antialiased">
         <AppProviders>{children}</AppProviders>
       </body>

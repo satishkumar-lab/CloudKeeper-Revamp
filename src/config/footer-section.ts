@@ -67,14 +67,14 @@ export const footerCol1Top: readonly FooterGroup[] = [
     links: [
       { label: "Overview", href: routes.platformSuite },
       { label: "CloudKeeper Commit", href: routes.platforms.commit },
-      { label: "CloudKeeper Tuner - AWS", href: "#" },
+      { label: "CloudKeeper Tuner - AWS", href: routes.platforms.tunerAws },
       { label: "CloudKeeper Tuner - GCP", href: "#" },
       { label: "CloudKeeper Tuner - Kubernetes", href: "#" },
       { label: "CloudKeeper Lens", href: "#" },
       { label: "CloudKeeper Lens - AWS", href: "#" },
       { label: "CloudKeeper Lens - GCP", href: "#" },
       { label: "CloudKeeper LensGPT", href: "#" },
-      { label: "FinOps for AI", href: "#" },
+      { label: "FinOps for AI", href: routes.platforms.finopsForAi },
     ],
   },
 ];

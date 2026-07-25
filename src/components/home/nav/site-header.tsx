@@ -174,24 +174,15 @@ function NavItem({
   );
 
   const inner = (
-    <>
-      <span className="flex items-center justify-center gap-1 py-8">
-        {label}
-        {hasDropdown && (
-          <NavChevron
-            open={isOpen}
-            className={isActive ? "text-[#17a5fb]" : undefined}
-          />
-        )}
-      </span>
-      <span
-        className={cn(
-          "h-1 w-full rounded-[3px] bg-[#17a5fb] transition-opacity",
-          isCurrentPage ? "opacity-100" : "opacity-0",
-        )}
-        aria-hidden
-      />
-    </>
+    <span className="flex items-center justify-center gap-1 py-8">
+      {label}
+      {hasDropdown && (
+        <NavChevron
+          open={isOpen}
+          className={isActive ? "text-[#17a5fb]" : undefined}
+        />
+      )}
+    </span>
   );
 
   if (hasDropdown && menuId && onToggle) {

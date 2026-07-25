@@ -9,7 +9,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useLenis } from "lenis/react";
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 
 import {
   CARD_OVERLAPPING_SECTION_BG,
@@ -24,7 +24,16 @@ export type CardOverlappingSectionProps = Partial<CardOverlappingContent> & {
   id?: string;
   background?: string;
   headingId?: string;
+  /** Pink hollow bullet used when cards have `bullets`. */
+  bulletIcon?: string;
+  /** Stars icon for `tagVariant: "featured"`. */
+  tagStarsIcon?: string;
+  /** Optional per-card custom visual (return null to use default image). */
+  renderVisual?: (card: CardOverlappingCard) => ReactNode;
 };
+
+const FEATURED_TAG_GRADIENT =
+  "linear-gradient(90deg, rgb(23, 165, 251) 0%, rgb(154, 75, 255) 50%, rgb(237, 0, 130) 100%)";
 
 function useIsLgUp() {
   const [isLgUp, setIsLgUp] = useState(false);
@@ -38,6 +47,32 @@ function useIsLgUp() {
   }, []);
 
   return isLgUp;
+}
+
+/** Sticky header (announcement + nav) height — keeps pin below SiteHeader. */
+function useStickyHeaderOffset() {
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+
+    const sync = () => {
+      setOffset(Math.ceil(header.getBoundingClientRect().height));
+    };
+
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(header);
+    window.addEventListener("resize", sync, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
+
+  return offset;
 }
 
 /** Pin-track progress 0→1 while the sticky stage is locked (Lenis-safe). */
@@ -80,21 +115,111 @@ function usePinProgress(
   return progress;
 }
 
-function PhaseCardArticle({ card }: { card: CardOverlappingCard }) {
-  return (
-    <article className="flex h-full flex-col gap-8 bg-white p-6 sm:p-8 lg:flex-row lg:items-center lg:gap-0 lg:p-[50px]">
-      <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 lg:min-h-[338px] lg:pr-6">
-        <div className="flex flex-col items-start gap-[30px]">
-          <span className="inline-flex items-center justify-center rounded-[22px] border-[0.6px] border-[#17a5fb] px-3.5 py-1 text-sm capitalize leading-[1.4] text-[#17a5fb]">
-            {card.tag}
+function CardTag({
+  tag,
+  variant = "default",
+  starsIcon,
+}: {
+  tag: string;
+  variant?: CardOverlappingCard["tagVariant"];
+  starsIcon?: string;
+}) {
+  if (variant === "featured") {
+    return (
+      <span
+        className="inline-flex rounded-[22px] p-px"
+        style={{ backgroundImage: FEATURED_TAG_GRADIENT }}
+      >
+        <span className="inline-flex items-center justify-center gap-1 rounded-[21px] bg-white py-3 pl-2.5 pr-1.5">
+          <span
+            className="bg-clip-text text-sm capitalize leading-none tracking-[-0.5px] text-transparent"
+            style={{ backgroundImage: FEATURED_TAG_GRADIENT }}
+          >
+            {tag}
           </span>
-          <div className="flex max-w-[515px] flex-col gap-2.5">
-            <h3 className="text-[clamp(1.5rem,2.5vw,1.875rem)] font-medium leading-[1.3] text-black">
+          {starsIcon ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={starsIcon}
+              alt=""
+              width={16}
+              height={15}
+              className="size-4 shrink-0 object-contain"
+            />
+          ) : null}
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <span className="inline-flex items-center justify-center rounded-[22px] border-[0.6px] border-[#17a5fb] px-3.5 py-1 text-sm capitalize leading-[1.4] text-[#17a5fb]">
+      {tag}
+    </span>
+  );
+}
+
+function PhaseCardArticle({
+  card,
+  bulletIcon,
+  tagStarsIcon,
+  renderVisual,
+}: {
+  card: CardOverlappingCard;
+  bulletIcon?: string;
+  tagStarsIcon?: string;
+  renderVisual?: (card: CardOverlappingCard) => ReactNode;
+}) {
+  const bullets = card.bullets?.filter(Boolean) ?? [];
+  const hasBullets = bullets.length > 0;
+  const customVisual = renderVisual?.(card);
+
+  return (
+    <article className="flex h-full flex-col gap-6 bg-white p-6 sm:p-8 lg:flex-row lg:items-center lg:gap-0 lg:p-10 xl:p-[42px]">
+      <div className="flex min-h-0 flex-1 flex-col justify-between gap-8 lg:min-h-[300px] lg:pr-6">
+        <div className="flex flex-col items-start gap-5 lg:gap-6">
+          {card.tag ? (
+            <CardTag
+              tag={card.tag}
+              variant={card.tagVariant}
+              starsIcon={tagStarsIcon}
+            />
+          ) : null}
+          <div className="flex max-w-[541px] flex-col gap-2.5">
+            <h3 className="text-[clamp(1.375rem,2.2vw,1.875rem)] font-medium leading-[1.3] text-black">
               {card.title}
             </h3>
-            <p className="text-base leading-[1.5] text-black">
-              {card.description}
-            </p>
+            {hasBullets ? (
+              <ul className="flex flex-col gap-2.5">
+                {bullets.map((bullet) => (
+                  <li
+                    key={bullet}
+                    className="flex items-center gap-5 text-base leading-[1.5] text-black"
+                  >
+                    {bulletIcon ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={bulletIcon}
+                        alt=""
+                        width={14}
+                        height={14}
+                        className="size-3.5 shrink-0 object-contain"
+                      />
+                    ) : (
+                      <span
+                        className="size-3.5 shrink-0 rounded-full border border-[#e80584]"
+                        aria-hidden
+                      />
+                    )}
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : card.description ? (
+              <p className="text-base leading-[1.5] text-black">
+                {card.description}
+              </p>
+            ) : null}
           </div>
         </div>
         <p
@@ -105,14 +230,26 @@ function PhaseCardArticle({ card }: { card: CardOverlappingCard }) {
         </p>
       </div>
 
-      <div className="relative h-[220px] w-full shrink-0 overflow-hidden rounded-[20px] bg-[#fbfbfb] sm:h-[280px] lg:h-[338px] lg:w-[580px]">
-        <Image
-          src={card.visual}
-          alt=""
-          fill
-          className="object-contain object-center"
-          sizes="(max-width: 1024px) 100vw, 580px"
-        />
+      <div className="relative h-[200px] w-full shrink-0 overflow-hidden rounded-[20px] sm:h-[260px] lg:h-[300px] lg:w-[520px] xl:h-[318px] xl:w-[560px]">
+        {customVisual ? (
+          customVisual
+        ) : (
+          <Image
+            src={card.visual}
+            alt=""
+            fill
+            className={cn(
+              "object-center",
+              card.visualFit === "cover" ? "object-cover" : "object-contain",
+            )}
+            style={
+              card.visualScale && card.visualScale !== 1
+                ? { transform: `scale(${card.visualScale})` }
+                : undefined
+            }
+            sizes="(max-width: 1024px) 100vw, 560px"
+          />
+        )}
       </div>
     </article>
   );
@@ -123,11 +260,17 @@ function OverlapCard({
   index,
   progress,
   total,
+  bulletIcon,
+  tagStarsIcon,
+  renderVisual,
 }: {
   card: CardOverlappingCard;
   index: number;
   progress: MotionValue<number>;
   total: number;
+  bulletIcon?: string;
+  tagStarsIcon?: string;
+  renderVisual?: (card: CardOverlappingCard) => ReactNode;
 }) {
   const steps = Math.max(total - 1, 1);
   const enterStart = index === 0 ? 0 : (index - 1) / steps;
@@ -158,7 +301,12 @@ function OverlapCard({
       style={{ y, scale, zIndex: index + 1 }}
     >
       <div className="size-full overflow-hidden rounded-[24px] border border-solid border-[#e6ecf1] bg-white lg:rounded-[28px]">
-        <PhaseCardArticle card={card} />
+        <PhaseCardArticle
+          card={card}
+          bulletIcon={bulletIcon}
+          tagStarsIcon={tagStarsIcon}
+          renderVisual={renderVisual}
+        />
       </div>
     </motion.div>
   );
@@ -179,65 +327,104 @@ export function CardOverlappingSection({
   id = "card-overlapping",
   background = CARD_OVERLAPPING_SECTION_BG,
   headingId = "card-overlapping-heading",
+  bulletIcon,
+  tagStarsIcon,
+  renderVisual,
 }: CardOverlappingSectionProps) {
   const reduceMotion = useReducedMotion() === true;
   const isLgUp = useIsLgUp();
   const pinEnabled = isLgUp && !reduceMotion;
+  const headerOffset = useStickyHeaderOffset();
 
   const trackRef = useRef<HTMLDivElement>(null);
   const progress = usePinProgress(trackRef, pinEnabled);
 
-  const trackHeight = `${Math.max(cards.length, 2) * 100}vh`;
+  /** Scroll distance per card — tighter than 100vh so stack feels snappier. */
+  const trackHeight = `${Math.max(cards.length, 2) * 70}vh`;
+  const hasHeadingLine2 = Boolean(headingLine2?.trim());
 
   const headingBlock = (
-    <div className="flex w-full max-w-[1280px] flex-col items-center gap-2.5 text-center">
+    <motion.div
+      className="flex w-full max-w-[1280px] flex-col items-center gap-2.5 text-center"
+      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+    >
       <h2
         id={headingId}
         className="text-[clamp(1.75rem,3vw,2.5rem)] font-normal leading-[1.3] tracking-[-0.2px] text-black"
       >
         {headingLine1}
-        <br />
-        {headingLine2}
+        {hasHeadingLine2 ? (
+          <>
+            <br />
+            {headingLine2}
+          </>
+        ) : null}
       </h2>
       <p className="max-w-[1138px] text-base leading-[1.5] text-black sm:text-lg">
         {subtitleBefore}
-        <span className="text-[#e80584]">{subtitleAccent}</span>
+        {subtitleAccent ? (
+          <span className="text-[#e80584]">{subtitleAccent}</span>
+        ) : null}
         {subtitleAfter}
       </p>
-    </div>
+    </motion.div>
   );
 
   return (
     <section
       id={id}
-      className={cn("relative font-sans", className)}
+      className={cn("relative py-10 font-sans", className)}
       style={{ background }}
       aria-labelledby={headingId}
     >
       {!pinEnabled ? (
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-[60px] px-5 py-16 sm:px-8 lg:px-[90px] lg:py-20">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-10 px-5 sm:px-8 lg:gap-12 lg:px-[90px]">
           {headingBlock}
-          <ul className="flex w-full max-w-[1260px] flex-col gap-[60px]">
+          <ul className="flex w-full max-w-[1260px] flex-col gap-10 lg:gap-12">
             {cards.map((card) => (
               <li
                 key={card.id}
                 className="overflow-hidden rounded-[24px] border border-solid border-[#e6ecf1] bg-white lg:rounded-[28px]"
               >
-                <PhaseCardArticle card={card} />
+                <PhaseCardArticle
+                  card={card}
+                  bulletIcon={bulletIcon}
+                  tagStarsIcon={tagStarsIcon}
+                  renderVisual={renderVisual}
+                />
               </li>
             ))}
           </ul>
         </div>
       ) : (
         <div ref={trackRef} className="relative" style={{ height: trackHeight }}>
-          <div className="sticky top-0 flex min-h-screen flex-col justify-center pt-16">
-            <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-10 px-5 py-10 sm:px-8 lg:gap-[60px] lg:px-[90px]">
+          {/*
+            Pin below sticky SiteHeader (announcement + nav).
+            Height = remaining viewport so content centers without huge bottom gap
+            and without sliding under the nav.
+          */}
+          <div
+            className="sticky flex flex-col justify-center py-10"
+            style={{
+              top: headerOffset,
+              height: `calc(100svh - ${headerOffset}px)`,
+            }}
+          >
+            <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 px-5 sm:px-8 lg:px-[90px]">
               {headingBlock}
 
               <div className="relative w-full max-w-[1260px] overflow-hidden rounded-[24px] lg:rounded-[28px]">
                 <div className="invisible pointer-events-none" aria-hidden>
                   <div className="m-px overflow-hidden rounded-[24px] border border-solid border-transparent lg:rounded-[28px]">
-                    <PhaseCardArticle card={cards[0]} />
+                    <PhaseCardArticle
+                      card={cards[0]}
+                      bulletIcon={bulletIcon}
+                      tagStarsIcon={tagStarsIcon}
+                      renderVisual={renderVisual}
+                    />
                   </div>
                 </div>
 
@@ -248,6 +435,9 @@ export function CardOverlappingSection({
                     index={index}
                     total={cards.length}
                     progress={progress}
+                    bulletIcon={bulletIcon}
+                    tagStarsIcon={tagStarsIcon}
+                    renderVisual={renderVisual}
                   />
                 ))}
               </div>

@@ -226,6 +226,17 @@
   }
 }
 
+/* FinOps challenges card — sparkle twinkle on hover */
+@keyframes ck-sparkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
 @keyframes str-reveal-ltr {
   0% {
     opacity: 0;

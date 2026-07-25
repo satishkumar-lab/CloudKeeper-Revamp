@@ -5,6 +5,8 @@ export const routes = {
   platformSuite: "/platform-suite",
   platforms: {
     commit: "/platform-suite/cloudkeeper-commit",
+    tunerAws: "/platform-suite/cloudkeeper-tuner-aws",
+    finopsForAi: "/platform-suite/finops-for-ai",
   },
   solutions: {
     az: "/solutions/cloudkeeper-az",
