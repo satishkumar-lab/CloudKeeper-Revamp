@@ -1,6 +1,12 @@
 "use client";
 
-import { logoRowAssets } from "@/config/logo-row";
+import {
+  fittedMarqueeLogoSize,
+  logoMarqueeItems,
+  logoRowAssets,
+  LOGO_MARQUEE_GAP_PX,
+  type LogoMarqueeItem,
+} from "@/config/logo-row";
 import {
   ScrollRevealGroup,
   ScrollRevealItem,
@@ -12,7 +18,7 @@ function G2TrustBadge({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center gap-[13px] border-r border-solid border-[#c9e4ff] pr-[60px]",
+        "flex h-[52px] shrink-0 items-center gap-[13px] border-r border-solid border-[#c9e4ff] pr-[60px]",
         className,
       )}
     >
@@ -70,33 +76,51 @@ function G2TrustBadge({ className }: { className?: string }) {
   );
 }
 
-/** Figma 8251:20364 — logo-scroll-colored */
+function MarqueeLogo({ logo }: { logo: LogoMarqueeItem }) {
+  const { width, height } = fittedMarqueeLogoSize(logo);
+
+  return (
+    <img
+      src={logo.src}
+      alt={logo.name}
+      width={width}
+      height={height}
+      className="max-w-none shrink-0 bg-transparent object-contain object-center"
+      style={{ width, height }}
+      decoding="async"
+    />
+  );
+}
+
 function LogoMarquee({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "group/marquee relative h-[61px] w-[1018px] shrink-0 overflow-hidden",
+        "group/marquee relative h-[52px] min-w-0 flex-1 overflow-hidden bg-transparent",
         className,
       )}
+      style={{
+        maskImage:
+          "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+      }}
     >
-      <div className="logo-marquee-track absolute left-0 top-1/2 flex w-max -translate-y-1/2 animate-[marquee_12s_linear_infinite] motion-reduce:animate-none">
-        <img
-          src={logoRowAssets.marqueeStrip}
-          alt=""
-          width={1018}
-          height={61}
-          className="h-[61px] w-[1018px] shrink-0 object-cover object-left"
-          decoding="async"
-        />
-        <img
-          src={logoRowAssets.marqueeStrip}
-          alt=""
-          width={1018}
-          height={61}
-          className="h-[61px] w-[1018px] shrink-0 object-cover object-left"
-          decoding="async"
-          aria-hidden
-        />
+      {/* Inner flex is vertically centered; only the track translates on X */}
+      <div className="absolute inset-y-0 left-0 flex items-center">
+        <div
+          className="logo-marquee-track flex w-max items-center bg-transparent animate-[marquee_32s_linear_infinite] motion-reduce:animate-none"
+          style={{ gap: LOGO_MARQUEE_GAP_PX, paddingRight: LOGO_MARQUEE_GAP_PX }}
+        >
+          {logoMarqueeItems.map((logo) => (
+            <MarqueeLogo key={`a-${logo.name}`} logo={logo} />
+          ))}
+          {logoMarqueeItems.map((logo) => (
+            <span key={`b-${logo.name}`} aria-hidden className="contents">
+              <MarqueeLogo logo={logo} />
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -106,17 +130,17 @@ export function LogoRowSection() {
   return (
     <section className="bg-white font-sans" aria-label="Trusted by customers">
       {/* Desktop — Figma logo-row 8251:20338 (1439×151) */}
-      <ScrollRevealGroup className="mx-auto hidden w-full max-w-[1440px] items-center justify-between px-20 py-10 lg:flex">
+      <ScrollRevealGroup className="mx-auto hidden w-full max-w-[1440px] items-center justify-between px-20 pt-5 pb-10 lg:flex">
         <ScrollRevealItem>
           <G2TrustBadge />
         </ScrollRevealItem>
-        <ScrollRevealItem>
+        <ScrollRevealItem className="min-w-0 flex-1">
           <LogoMarquee />
         </ScrollRevealItem>
       </ScrollRevealGroup>
 
       {/* Mobile / tablet */}
-      <ScrollRevealGroup className="flex flex-col gap-4 px-5 py-10 sm:px-8 lg:hidden">
+      <ScrollRevealGroup className="flex flex-col items-center gap-4 px-5 pt-5 pb-10 sm:px-8 lg:hidden">
         <ScrollRevealItem className="flex justify-center">
           <G2TrustBadge className="border-r-0 pr-0" />
         </ScrollRevealItem>
